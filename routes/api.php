@@ -27,3 +27,4 @@ Route::resource('role', 'RoleController');
 Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
 Route::resource('department', 'DepartmentController');
+Route::resource('job', 'JobController');
