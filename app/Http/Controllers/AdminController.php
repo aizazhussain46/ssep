@@ -23,7 +23,17 @@ class AdminController extends Controller
      */
     public function index()
     {
-        
+        $user = User::where('users.master', 0)->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'users.status_id', '=', 'statuses.id')
+        ->leftJoin('departments', 'users.dept_id', '=', 'departments.id')
+        ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
+        ->select('users.*','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
+        ->get();
+        return response()->json([
+			'success' => true,
+			'data' => $user
+		],200);
     }
 
     /**
@@ -66,11 +76,17 @@ class AdminController extends Controller
 		}
 
 		$input = $request->all(); 
-		//$input['master'] = 1;
+		$input['master'] = 0;
 		$input['password'] = bcrypt($input['password']); 
-		$user = User::create($input); 
+		$create = User::create($input); 
 		//$token = $user->createToken('myApp')->accessToken; 
-
+        $user = User::where('users.id', $create->id)->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'users.status_id', '=', 'statuses.id')
+        ->leftJoin('departments', 'users.dept_id', '=', 'departments.id')
+        ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
+        ->select('users.*','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
+        ->first();
 		return response()->json([
 			'success' => true,
 			'data' => $user
@@ -85,7 +101,18 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-       
+        $user = User::where('users.id', $id)->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'users.status_id', '=', 'statuses.id')
+        ->leftJoin('departments', 'users.dept_id', '=', 'departments.id')
+        ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
+        ->select('users.*','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
+        ->get();
+
+        return response()->json([
+			'success' => true,
+			'data' => $user
+		],200);
     }
 
     /**
@@ -108,7 +135,40 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-       
+        $validator = Validator::make($request->all(), [ 
+			'role_id' => 'required',
+			'team_lead_id' => 'required',
+			'dept_id' => 'required',
+			'name' => 'required', 
+			'email' => 'required', 
+			'mobile_no' => 'required',
+			'cnic' => 'required',
+			'district_id' => 'required'
+		]); 
+		if ($validator->fails()) { 
+
+			return response()->json([
+			'success' => false,
+			'errors' => $validator->errors()
+		
+		]); 
+
+		}
+
+		$input = $request->all(); 
+		$input['password'] = bcrypt($input['password']); 
+		$update = User::where('id', $id)->update($input); 
+        $user = User::where('users.id', $id)->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'users.status_id', '=', 'statuses.id')
+        ->leftJoin('departments', 'users.dept_id', '=', 'departments.id')
+        ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
+        ->select('users.*','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
+        ->first();
+		return response()->json([
+			'success' => true,
+			'data' => $user
+		],200);  
     }
 
     /**
