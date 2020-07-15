@@ -59,7 +59,6 @@ class JobController extends Controller
 			'brief' => 'required',
 			'deliverables' => 'required', 
 			'timelines' => 'required',
-			'created_by' => 'required',
 			'district_id' => 'required'
 		]); 
 		if ($validator->fails()) { 
@@ -71,8 +70,9 @@ class JobController extends Controller
 		]); 
 
 		}
-
-		$input = $request->all(); 
+        $user = Auth::user();
+        $input = $request->all();
+        $input["created_by"] = $user->id;
 		$create = Job::create($input); 
 		$job = Job::where('jobs.id', $create->id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
         ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')

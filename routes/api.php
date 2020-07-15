@@ -22,6 +22,7 @@ Route::get('me', 'AuthController@me');
 Route::post('login', 'AuthController@login');
 //Route::post('register', 'AuthController@register');
 Route::resource('users', 'AdminController');
+Route::post('change_password/{id}', 'AdminController@password_change');
 
 Route::resource('role', 'RoleController');
 Route::resource('status', 'StatusController');

@@ -154,7 +154,7 @@ class AdminController extends Controller
 		}
 
 		$input = $request->all(); 
-		$input['password'] = bcrypt($input['password']); 
+		//$input['password'] = bcrypt($input['password']); 
 		$update = User::where('id', $id)->update($input); 
         $user = User::where('users.id', $id)->leftJoin('roles', 'users.role_id', '=', 'roles.id')
         ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
@@ -180,5 +180,33 @@ class AdminController extends Controller
         return (User::find($id)->delete()) 
                 ? [ 'response_status' => true, 'message' => 'user has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'user cannot delete' ];
+    }
+
+
+    public function password_change(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [ 
+			'password' => 'required'
+		]); 
+		if ($validator->fails()) {
+			return response()->json([
+			'success' => false,
+			'errors' => $validator->errors()
+		]);
+		}
+        $input = $request->all();         
+        $input['password'] = bcrypt($input['password']); 
+        $update = User::where('id', $id)->update($input);
+        if($update){
+            return response()->json([
+                'success' => true
+            ],200); 
+        }
+        else{
+            return response()->json([
+                'success' => false
+            ]); 
+        }
+		 
     }
 }
