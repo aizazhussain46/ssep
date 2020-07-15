@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Role;
+use App\Department;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-class RoleController extends Controller
+class DepartmentController extends Controller
 {
-	public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api')->except('register','login','logout');
 	}
@@ -19,7 +19,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return response()->json(Role::all());
+        return response()->json(Department::all());
     }
 
     /**
@@ -29,7 +29,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
@@ -41,7 +41,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [ 
-			'role' => 'required'
+            'department' => 'required'
 		]); 
 		if ($validator->fails()) { 
 
@@ -52,10 +52,10 @@ class RoleController extends Controller
 		}
 
 		$input = $request->all(); 
-		$role = Role::create($input); 
+		$department = Department::create($input); 
 		return response()->json([
 			'success' => true,
-			'data' => $role
+			'data' => $department
 		],200); 
     }
 
@@ -67,7 +67,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Role::find($id));
+        return response()->json(Department::find($id));
     }
 
     /**
@@ -91,7 +91,7 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [ 
-			'role' => 'required'
+			'department' => 'required'
 		]); 
 		if ($validator->fails()) { 
 
@@ -102,8 +102,8 @@ class RoleController extends Controller
 		}
 
 		$input = $request->all(); 
-        $role = Role::where('id', $id)->update($input); 
-        $get = Role::find($id);
+        $department = Department::where('id', $id)->update($input); 
+        $get = Department::find($id);
 		return response()->json([
 			'success' => true,
 			'data' => $get
@@ -118,9 +118,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        return (Role::find($id)->delete()) 
-                ? [ 'response_status' => true, 'message' => 'role has been deleted' ] 
-                : [ 'response_status' => false, 'message' => 'role cannot delete' ];
+        return (Department::find($id)->delete()) 
+                ? [ 'response_status' => true, 'message' => 'Department has been deleted' ] 
+                : [ 'response_status' => false, 'message' => 'Department cannot delete' ];
     }
-	
 }

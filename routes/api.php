@@ -20,9 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('me', 'AuthController@me');
 Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
+//Route::post('register', 'AuthController@register');
 Route::resource('users', 'AdminController');
 
 Route::resource('role', 'RoleController');
 Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
+Route::resource('department', 'DepartmentController');
