@@ -56,7 +56,6 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [ 
 			'role_id' => 'required',
-			'team_lead_id' => 'required',
 			'dept_id' => 'required',
 			'name' => 'required', 
 			'email' => 'required|email|unique:users',
@@ -137,7 +136,6 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [ 
 			'role_id' => 'required',
-			'team_lead_id' => 'required',
 			'dept_id' => 'required',
 			'name' => 'required', 
 			'email' => 'required', 
