@@ -8,6 +8,6 @@ class Job extends Model
 {
     protected $fillable = [
         'task_title', 'nature_of_task', 'brief', 'deliverables', 'timelines', 'district_id', 
-        'status_id', 'created_by'
+        'status_id', 'created_by', 'dept_id'
     ];
 }

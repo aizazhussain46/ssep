@@ -29,3 +29,8 @@ Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
 Route::resource('department', 'DepartmentController');
 Route::resource('job', 'JobController');
+Route::get('pending_jobs', 'JobController@pending_jobs');
+Route::post('approve_job/{id}', 'JobController@approve_job');
+Route::get('jobs_by_department', 'JobController@jobs_by_department');
+Route::get('users_by_department', 'AdminController@users_by_department');
+Route::resource('assign', 'AssignController');

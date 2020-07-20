@@ -73,6 +73,8 @@ class JobController extends Controller
         $user = Auth::user();
         $input = $request->all();
         $input["created_by"] = $user->id;
+        $input["dept_id"] = $user->dept_id;
+        $input["status_id"] = 1;
 		$create = Job::create($input); 
 		$job = Job::where('jobs.id', $create->id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
         ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
@@ -130,7 +132,6 @@ class JobController extends Controller
 			'brief' => 'required',
 			'deliverables' => 'required', 
 			'timelines' => 'required',
-			'created_by' => 'required',
 			'district_id' => 'required'
 		]); 
 		if ($validator->fails()) { 
@@ -167,5 +168,55 @@ class JobController extends Controller
         return (Job::find($id)->delete()) 
                 ? [ 'response_status' => true, 'message' => 'Job has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'Job cannot delete' ];
+    }
+
+    public function pending_jobs()
+    {
+        $job = Job::where('jobs.status_id', 1)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
+        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
+        ->select('jobs.*','users.name','districts.district','statuses.status')
+        ->orderBy('jobs.id', "DESC")
+        ->get();
+		return response()->json([
+			'success' => true,
+			'data' => $job
+		],200);
+    }
+
+    public function approve_job(Request $request, $id){
+        $validator = Validator::make($request->all(), [ 
+			'status_id' => 'required'
+		]); 
+		if ($validator->fails()) { 
+
+			return response()->json([
+			'success' => false,
+			'errors' => $validator->errors()
+		
+		]); 
+
+		}
+		$input = $request->all(); 
+		$update = Job::where('id', $id)->update($input); 
+		
+		return response()->json([
+			'success' => true
+		],200);
+    }
+    public function jobs_by_department()
+    {
+        $user = Auth::user();
+        
+        $job = Job::where(['jobs.status_id'=>6,'jobs.dept_id'=>$user->dept_id])->leftJoin('users', 'jobs.created_by', '=', 'users.id')
+        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
+        ->select('jobs.*','users.name','districts.district','statuses.status')
+        ->orderBy('jobs.id', "DESC")
+        ->get();
+		return response()->json([
+			'success' => true,
+			'data' => $job
+		],200);
     }
 }

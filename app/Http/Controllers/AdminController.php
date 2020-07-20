@@ -206,7 +206,23 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false
             ]); 
-        }
-		 
+        } 
+    }
+
+    public function users_by_department()
+    {
+        $user = Auth::user();
+        $user = User::where('users.dept_id', $user->dept_id)->whereIn('users.role_id', [3,4])->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+        ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+        ->leftJoin('statuses', 'users.status_id', '=', 'statuses.id')
+        ->leftJoin('departments', 'users.dept_id', '=', 'departments.id')
+        ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
+        ->select('users.name','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
+        ->get();
+
+        return response()->json([
+			'success' => true,
+			'data' => $user
+		],200);
     }
 }
