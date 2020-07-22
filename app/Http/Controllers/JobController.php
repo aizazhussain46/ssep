@@ -53,6 +53,10 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $prev_job = Job::where(['status_id'=>1, 'dept_id'=>$user->dept_id])->first();
+        if($prev_job){
+        
         $validator = Validator::make($request->all(), [ 
 			'task_title' => 'required',
 			'nature_of_task' => 'required', 
@@ -70,7 +74,7 @@ class JobController extends Controller
 		]); 
 
 		}
-        $user = Auth::user();
+        
         $input = $request->all();
         $input["created_by"] = $user->id;
         $input["dept_id"] = $user->dept_id;
@@ -84,7 +88,14 @@ class JobController extends Controller
 		return response()->json([
 			'success' => true,
 			'data' => $job
-		],200);
+        ],200);
+    }
+    else{
+        return response()->json([
+			'success' => false,
+			'msg' => "You have any unassigned job. kindly Assign it."
+        ],200); 
+    }
     }
 
     /**

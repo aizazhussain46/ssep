@@ -34,3 +34,5 @@ Route::post('approve_job/{id}', 'JobController@approve_job');
 Route::get('jobs_by_department', 'JobController@jobs_by_department');
 Route::get('users_by_department', 'AdminController@users_by_department');
 Route::resource('assign', 'AssignController');
+Route::resource('milestone', 'MilestoneController');
+Route::get('milestones_by_job/{id}', 'MilestoneController@milestones_by_job');
