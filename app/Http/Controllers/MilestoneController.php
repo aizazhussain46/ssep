@@ -50,8 +50,7 @@ class MilestoneController extends Controller
         $validator = Validator::make($request->all(), [ 
 			'milestone_title' => 'required',
 			'description' => 'required',
-			'deliverables' => 'required', 
-            'timelines' => 'required',
+			'duration' => 'required',
             'job_id' => 'required'
 		]); 
 		if ($validator->fails()) { 
@@ -123,8 +122,7 @@ class MilestoneController extends Controller
         $validator = Validator::make($request->all(), [ 
 			'milestone_title' => 'required',
 			'description' => 'required',
-			'deliverables' => 'required', 
-            'timelines' => 'required'
+			'duration' => 'required'
 		]); 
 		if ($validator->fails()) { 
 

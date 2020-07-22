@@ -62,7 +62,8 @@ class JobController extends Controller
 			'nature_of_task' => 'required', 
 			'brief' => 'required',
 			'deliverables' => 'required', 
-			'timelines' => 'required',
+			'from' => 'required',
+			'to' => 'required',
 			'district_id' => 'required'
 		]); 
 		if ($validator->fails()) { 
@@ -142,7 +143,8 @@ class JobController extends Controller
 			'nature_of_task' => 'required', 
 			'brief' => 'required',
 			'deliverables' => 'required', 
-			'timelines' => 'required',
+			'from' => 'required',
+			'to' => 'required',
 			'district_id' => 'required'
 		]); 
 		if ($validator->fails()) { 

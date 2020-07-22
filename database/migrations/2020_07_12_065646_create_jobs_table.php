@@ -19,7 +19,8 @@ class CreateJobsTable extends Migration
             $table->string('nature_of_task')->nullable();
             $table->string('brief')->nullable();
             $table->string('deliverables')->nullable();
-            $table->string('timelines')->nullable();
+            $table->string('from')->nullable();
+            $table->string('to')->nullable();
             $table->integer('district_id')->nullable();
             $table->integer('status_id')->nullable();
             $table->integer('created_by')->nullable();
