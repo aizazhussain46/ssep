@@ -54,8 +54,8 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $prev_job = Job::where(['status_id'=>1, 'dept_id'=>$user->dept_id])->first();
-        if($prev_job){
+        // $prev_job = Job::where(['status_id'=>1, 'dept_id'=>$user->dept_id])->first();
+        // if($prev_job){
         
         $validator = Validator::make($request->all(), [ 
 			'task_title' => 'required',
@@ -79,7 +79,7 @@ class JobController extends Controller
         $input = $request->all();
         $input["created_by"] = $user->id;
         $input["dept_id"] = $user->dept_id;
-        $input["status_id"] = 1;
+        $input["status_id"] = 8;
 		$create = Job::create($input); 
 		$job = Job::where('jobs.id', $create->id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
         ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
@@ -90,13 +90,13 @@ class JobController extends Controller
 			'success' => true,
 			'data' => $job
         ],200);
-    }
-    else{
-        return response()->json([
-			'success' => false,
-			'msg' => "You have any unassigned job. kindly Assign it."
-        ],200); 
-    }
+    // }
+    // else{
+    //     return response()->json([
+	// 		'success' => false,
+	// 		'msg' => "You have any unassigned job. kindly Assign it."
+    //     ],200); 
+    // }
     }
 
     /**
@@ -145,7 +145,8 @@ class JobController extends Controller
 			'deliverables' => 'required', 
 			'from' => 'required',
 			'to' => 'required',
-			'district_id' => 'required'
+            'district_id' => 'required',
+            'message' => 'required'
 		]); 
 		if ($validator->fails()) { 
 
@@ -158,16 +159,18 @@ class JobController extends Controller
 		}
 
 		$input = $request->all(); 
-		$update = Job::where('id', $id)->update($input); 
-		$job = Job::where('jobs.id', $id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->first();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-		],200);
+        $update = Job::where('id', $id)->update($input); 
+        if($update){
+            $job = Job::where('jobs.id', $id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
+            ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
+            ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
+            ->select('jobs.*','users.name','districts.district','statuses.status')
+            ->first();
+            return response()->json([
+                'success' => true,
+                'data' => $job
+            ],200);
+        }
     }
 
     /**
