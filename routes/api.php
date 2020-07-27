@@ -21,6 +21,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('me', 'AuthController@me');
 Route::post('login', 'AuthController@login');
 //Route::post('register', 'AuthController@register');
+
+Route::resource('survey', 'SurveyController');
+
+
 Route::resource('users', 'AdminController');
 Route::post('change_password/{id}', 'AdminController@password_change');
 
