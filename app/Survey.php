@@ -13,7 +13,19 @@ class Survey extends Model
         return $this->belongsTo('App\User');
     }
 
+
+    public function district()
+    {
+        return $this->belongsTo('App\District');
+    }
+    
+
+    public function job()
+    {
+        return $this->belongsTo('App\Job');
+    }
+
     protected $casts = [
-        'fms' => 'array',
+        'created_at' => 'datetime:d-M-y'
     ];
 }

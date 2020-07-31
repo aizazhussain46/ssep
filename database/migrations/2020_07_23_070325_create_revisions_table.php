@@ -15,10 +15,10 @@ class CreateRevisionsTable extends Migration
     {
         Schema::create('revisions', function (Blueprint $table) {
             $table->id();
-            $table->integer('sender_id')->nullable();
-            $table->integer('reciever_id')->nullable();
-            $table->integer('job_id')->nullable();
-            $table->string('message')->nullable();
+            $table->integer('s_id');
+            $table->integer('r_id');
+            $table->integer('job_id');
+            $table->string('msg')->nullable();
             $table->timestamps();
         });
     }

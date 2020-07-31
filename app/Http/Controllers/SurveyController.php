@@ -14,7 +14,16 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        return Survey::all();
+        $surveys = Survey::orderBy('id', 'DESC')->get();
+
+        foreach($surveys as $survey){
+            $survey->user = $survey->user;
+            $survey->district = $survey->district;
+            $survey->job = $survey->job;
+            $survey->fms = json_decode($survey->fms);
+            
+        }
+		return response()->json([ 'success' => true, 'data' => $surveys ] ,200);
     }
 
     /**
@@ -25,6 +34,10 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
+
+        // $s = Survey::create(['user_id' => 1,'survey_field' => json_encode($request->all())]);
+        // return $s ? 200 : 201;
+        // die;
         $arr = [
             'name' => $request->name,
             'address' => $request->address,
@@ -41,7 +54,7 @@ class SurveyController extends Controller
             'farm_size' => $request->farm_size,
             'amount' => $request->amount,
             'price_kwh' => $request->price_kwh,
-            'price_kwh' => $request->price_kwh,
+            'peak_hours' => $request->peak_hours,
             'reliability' => $request->reliability,
             'fan' => $request->fan,
             'fan_hours' => $request->fan_hours,
@@ -60,7 +73,9 @@ class SurveyController extends Controller
             'other' => $request->other,
             'other_hours' => $request->other_hours,
             'feedback' => $request->feedback,
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
+            'job_id' => $request->job_id,
+            'district_id' => $request->district_id
         ];
     //    echo json_encode($arr);
     //    die;
@@ -80,9 +95,14 @@ class SurveyController extends Controller
      * @param  \App\Survey  $survey
      * @return \Illuminate\Http\Response
      */
-    public function show(Survey $survey)
+    public function show($id)
     {
-        //
+        $survey = Survey::find($id);
+        $survey->user = $survey->user;
+        $survey->district = $survey->district;
+        $survey->job = $survey->job;
+        $survey->fms = json_decode($survey->fms);   
+        return $survey;
     }
 
 

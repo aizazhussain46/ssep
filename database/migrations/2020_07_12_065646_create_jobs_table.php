@@ -17,13 +17,15 @@ class CreateJobsTable extends Migration
             $table->id();
             $table->string('task_title')->nullable();
             $table->string('nature_of_task')->nullable();
-            $table->string('brief')->nullable();
-            $table->string('deliverables')->nullable();
-            $table->string('from')->nullable();
-            $table->string('to')->nullable();
+            $table->json('deliverables')->nullable();
+            $table->string('attachment')->nullable();
             $table->integer('district_id')->nullable();
+            $table->integer('department_id')->nullable();
             $table->integer('status_id')->nullable();
-            $table->integer('created_by')->nullable();
+            $table->integer('created_by');
+            $table->integer('assigned_to');
+            $table->timestamp('_from')->nullable();
+            $table->timestamp('_to')->nullable();
             $table->timestamps();
         });
     }

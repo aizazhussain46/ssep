@@ -10,112 +10,59 @@ class DepartmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except('register','login','logout');
+        $this->middleware('auth:api');
 	}
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return response()->json(Department::all());
+        return Department::orderBy('id','DESC')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [ 
-            'department' => 'required'
-		]); 
+        $validator = Validator::make($request->all(), [ 'department' => 'required' ]); 
 		if ($validator->fails()) { 
 
-			return response()->json([
-			'success' => false,
-			'errors' => $validator->errors()
-		]); 
-		}
+			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
+        }
+        
+        $arr = [ 'department' => $request->department ];
 
-		$input = $request->all(); 
-		$department = Department::create($input); 
-		return response()->json([
-			'success' => true,
-			'data' => $department
-		],200); 
+        $created = Department::create($arr);
+        if ($created) {
+            return response()->json([ 'success' => true, 'data' => $created ],200); 
+        } else {
+            return response()->json([ 'success' => false, 'data' => '' ],200); 
+        }
+		
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return response()->json(Department::find($id));
+        return Department::find($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [ 
-			'department' => 'required'
-		]); 
+        $validator = Validator::make($request->all(), [ 'department' => 'required' ]); 
+
 		if ($validator->fails()) { 
 
-			return response()->json([
-			'success' => false,
-			'errors' => $validator->errors()
-		]); 
-		}
+			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
+        }
+        $arr = [ 'department' => $request->department ];
 
-		$input = $request->all(); 
-        $department = Department::where('id', $id)->update($input); 
-        $get = Department::find($id);
-		return response()->json([
-			'success' => true,
-			'data' => $get
-		],200); 
+        $updated = Department::where('id', $id)->update($arr); 
+
+        if ($updated) {
+            $department = Department::find($id);
+
+            return response()->json([ 'success' => true, 'data' => $department ],200); 
+
+        } else {
+            return response()->json([ 'success' => true, 'data' => '' ],200); 
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         return (Department::find($id)->delete()) 

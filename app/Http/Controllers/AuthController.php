@@ -19,7 +19,7 @@ class AuthController extends Controller
     }
 	public function login(Request $request){ 
 
-	if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+	if(Auth::attempt(['email' => $request->email, 'password' => $request->password , 'isActive' => 1])){ 
 			$user = Auth::user(); 
 			$user->user_type = Role::find($user->role_id)->role ?? '';
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePassonsTable extends Migration
+class CreateStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreatePassonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('passons', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->integer('passed_by')->nullable();
-            $table->integer('passed_to')->nullable();
-            $table->integer('job_id')->nullable();
+            $table->string('status')->nullable();
+            $table->string('keyword')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreatePassonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('passons');
+        Schema::dropIfExists('statuses');
     }
 }

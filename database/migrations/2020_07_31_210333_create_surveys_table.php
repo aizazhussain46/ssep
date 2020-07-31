@@ -26,7 +26,7 @@ class CreateSurveysTable extends Migration
             $table->string('distance')->nullable();
             $table->string('occupation')->nullable();
             $table->string('gi')->nullable();
-            $table->string('expenditures');
+            $table->string('expenditures')->nullable();
             $table->string('farm_size')->nullable();
             $table->string('amount')->nullable();
             $table->string('price_kwh')->nullable();
@@ -49,7 +49,9 @@ class CreateSurveysTable extends Migration
             $table->string('other')->nullable();
             $table->string('other_hours')->nullable();
             $table->longText('feedback')->nullable();
-            $table->integer('user_id');            
+            $table->integer('job_id');
+            $table->integer('district_id');
+            $table->integer('user_id');          
             $table->timestamps();
         });
     }

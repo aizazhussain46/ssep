@@ -30,6 +30,7 @@ class AdminController extends Controller
         ->leftJoin('users as tl', 'tl.id', '=', 'users.team_lead_id')
         ->select('users.*','roles.role','districts.district','statuses.status','departments.department','tl.name as team_lead')
         ->get();
+
         return response()->json([
 			'success' => true,
 			'data' => $user

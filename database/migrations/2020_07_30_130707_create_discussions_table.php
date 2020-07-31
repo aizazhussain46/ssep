@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssignsTable extends Migration
+class CreateDiscussionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateAssignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assigns', function (Blueprint $table) {
+        Schema::create('discussions', function (Blueprint $table) {
             $table->id();
-            $table->integer('job_id')->nullable();
-            $table->integer('user_id')->nullable();
-            $table->integer('status_id')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ class CreateAssignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assigns');
+        Schema::dropIfExists('discussions');
     }
 }

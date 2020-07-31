@@ -15,56 +15,34 @@ class JobController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except('register','login','logout');
+        $this->middleware('auth:api');
 	}
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  
     public function index()
     {
-        $job = Job::leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->get();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-		],200);
+
+        $jobs = Job::orderBy('id', 'DESC')->get();
+
+        foreach($jobs as $job){
+            $job->created_by_user = $job->created_by_user;
+            $job->assigned_to_user = $job->assigned_to_user;
+            $job->department = $job->department;
+            $job->status = $job->status;
+            $job->district = $job->district;
+        }
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        // $prev_job = Job::where(['status_id'=>1, 'dept_id'=>$user->dept_id])->first();
-        // if($prev_job){
         
         $validator = Validator::make($request->all(), [ 
 			'task_title' => 'required',
 			'nature_of_task' => 'required', 
-			'brief' => 'required',
 			'deliverables' => 'required', 
 			'from' => 'required',
-			'to' => 'required',
-			'district_id' => 'required'
+			'to' => 'required'
 		]); 
 		if ($validator->fails()) { 
 
@@ -74,165 +52,113 @@ class JobController extends Controller
 		
 		]); 
 
-		}
+        }
+
+        $attachment = asset('uploads/attachments/no-img.png');
+
+        if($request->hasFile('attachment')){
+           $attachment = $request->attachment->getClientOriginalName();
+           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
+           $attachment = asset('uploads/attachments/' . $attachment);
+        }
         
-        $input = $request->all();
-        $input["created_by"] = $user->id;
-        $input["dept_id"] = $user->dept_id;
-        $input["status_id"] = 8;
-		$create = Job::create($input); 
-		$job = Job::where('jobs.id', $create->id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->first();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-        ],200);
-    // }
-    // else{
-    //     return response()->json([
-	// 		'success' => false,
-	// 		'msg' => "You have any unassigned job. kindly Assign it."
-    //     ],200); 
-    // }
+        $arr = [
+            'task_title' => $request->task_title,
+            'nature_of_task' => $request->nature_of_task,
+            'deliverables' => $request->deliverables,
+            'created_by' => $request->created_by,
+            'department_id' => $request->department_id,
+            '_from' => $request->from,
+            '_to' => $request->to,
+            'district_id' => $request->district_id,
+            'status_id' => 1,
+            'attachment' => $attachment,
+            'assigned_to' => $request->assigned_to
+
+        ];
+        
+        $created = Job::create($arr);
+       
+        if($created){
+
+
+            $created->created_by_user = $created->created_by_user;
+            $created->assigned_to_user = $created->assigned_to_user;
+            $created->department = $created->department;
+            $created->status = $created->status;
+            $created->district = $created->district;
+            
+            return response()->json(['success' => true, 'data' => $created]);
+        }
+        else{
+            return response()->json(['success' => false,'data' => '']);
+        }
+        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $job = Job::where('jobs.id', $id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->get();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-		],200);
+        $job = Job::where('jobs.id', $id)->first();
+
+        $job->created_by_user = $job->created_by_user;
+        $job->assigned_to_user = $job->assigned_to_user;
+        $job->department = $job->department;
+        $job->status = $job->status;
+        $job->district = $job->district;
+        
+		return response()->json([ 'success' => true, 'data' => $job ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    
+
+
+
+    public function update_job(Request $request, $id)
     {
-        //
-    }
+        $attachment = '';
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [ 
-			'task_title' => 'required',
-			'nature_of_task' => 'required', 
-			'brief' => 'required',
-			'deliverables' => 'required', 
-			'from' => 'required',
-			'to' => 'required',
-            'district_id' => 'required',
-            'message' => 'required'
-		]); 
-		if ($validator->fails()) { 
+        if($request->hasFile('attachment')){
+           $attachment = $request->attachment->getClientOriginalName();
+           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
+           $attachment = asset('uploads/attachments/' . $attachment);
+        }
+        else{ $attachment = Job::find($id)->attachment; }
 
-			return response()->json([
-			'success' => false,
-			'errors' => $validator->errors()
-		
-		]); 
+        $arr = [
+            'task_title' => $request->task_title,
+            'nature_of_task' => $request->nature_of_task,
+            'deliverables' => $request->deliverables,
+            'department_id' => $request->department_id,
+            '_from' => $request->from,
+            '_to' => $request->to,
+            'district_id' => $request->district_id,
+            'assigned_to' => $request->assigned_to,
+            'attachment' => $attachment
+        ];
+        
+        $updated = Job::where('id', $id)->update($arr); 
 
-		}
+        if($updated){
 
-		$input = $request->all(); 
-        $update = Job::where('id', $id)->update($input); 
-        if($update){
-            $job = Job::where('jobs.id', $id)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-            ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-            ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-            ->select('jobs.*','users.name','districts.district','statuses.status')
-            ->first();
-            return response()->json([
-                'success' => true,
-                'data' => $job
-            ],200);
+            $job = Job::find($id);
+
+            $job->created_by_user = $job->created_by_user;
+            $job->assigned_to_user = $job->assigned_to_user;
+            $job->department = $job->department;
+            $job->status = $job->status;
+            $job->district = $job->district;
+    
+            return response()->json([ 'success' => true, 'data' => $job ]);
+        }
+        else{
+            return response()->json([ 'success' => false,'data' => '' ]);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         return (Job::find($id)->delete()) 
                 ? [ 'response_status' => true, 'message' => 'Job has been deleted' ] 
-                : [ 'response_status' => false, 'message' => 'Job cannot delete' ];
-    }
-
-    public function pending_jobs()
-    {
-        $job = Job::where('jobs.status_id', 1)->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->orderBy('jobs.id', "DESC")
-        ->get();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-		],200);
-    }
-
-    public function approve_job(Request $request, $id){
-        $validator = Validator::make($request->all(), [ 
-			'status_id' => 'required'
-		]); 
-		if ($validator->fails()) { 
-
-			return response()->json([
-			'success' => false,
-			'errors' => $validator->errors()
-		
-		]); 
-
-		}
-		$input = $request->all(); 
-		$update = Job::where('id', $id)->update($input); 
-		
-		return response()->json([
-			'success' => true
-		],200);
-    }
-    public function jobs_by_department()
-    {
-        $user = Auth::user();
-        
-        $job = Job::where(['jobs.status_id'=>6,'jobs.dept_id'=>$user->dept_id])->leftJoin('users', 'jobs.created_by', '=', 'users.id')
-        ->leftJoin('districts', 'jobs.district_id', '=', 'districts.id')
-        ->leftJoin('statuses', 'jobs.status_id', '=', 'statuses.id')
-        ->select('jobs.*','users.name','districts.district','statuses.status')
-        ->orderBy('jobs.id', "DESC")
-        ->get();
-		return response()->json([
-			'success' => true,
-			'data' => $job
-		],200);
+                : [ 'response_status' => false, 'message' => 'Job cannot delete' ] ;
     }
 }
