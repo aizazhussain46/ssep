@@ -11,15 +11,38 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except('register','login','logout');
+        $this->middleware('auth:api')->except('login','btl_login');
 	}
-    public function index()
-    {
-        echo 'all users';
-    }
+
 	public function login(Request $request){ 
 
-	if(Auth::attempt(['email' => $request->email, 'password' => $request->password , 'isActive' => 1])){ 
+	 return $this->login_worker([
+		 'email' => $request->email,
+		 'password' => $request->password,
+		 'isActive' => 1
+		 ]);
+
+	}
+
+
+	public function btl_login(Request $request){ 
+		  
+		return $this->login_worker([
+			'email' => $request->email, 
+			'password' => $request->password, 
+			'isActive' => 1,
+			'department_id' => 6
+			]);
+	
+		}
+
+	public function me(Request $request){
+		return response()->json([ 'user' => Auth::user() ],200); 
+	}
+
+	public function login_worker($params)
+	{
+		if(Auth::attempt($params)){ 
 			$user = Auth::user(); 
 			$user->user_type = Role::find($user->role_id)->role ?? '';
 
@@ -30,47 +53,6 @@ class AuthController extends Controller
 			else{ 
 			return response()->json(['error'=>'email or password is incorrect'], 422); 
 			} 
-	}
-
-	public function register(Request $request) { 
-		// $validator = Validator::make($request->all(), [ 
-		// 	'role_id' => 'required',
-		// 	'team_lead_id' => 'required',
-		// 	'dept_id' => 'required',
-		// 	'name' => 'required', 
-		// 	'email' => 'required|email|unique:users',
-		// 	'password' => 'required', 
-		// 	'mobile_no' => 'required|unique:users',
-		// 	'cnic' => 'required',
-		// 	'district_id' => 'required'
-		// ]); 
-		// if ($validator->fails()) { 
-
-		// 	return response()->json([
-		// 	'success' => false,
-		// 	'errors' => $validator->errors()
-		
-		// ]); 
-
-		// }
-
-		// $input = $request->all(); 
-		// //$input['master'] = 1;
-		// $input['password'] = bcrypt($input['password']); 
-		// $user = User::create($input); 
-		// //$token = $user->createToken('myApp')->accessToken; 
-
-		// return response()->json([
-		// 	'success' => true,
-		// 	'data' => $user
-		// ],200); 
-
-	}
-
-	public function me(Request $request){
-		return response()->json([
-		'user' => Auth::user()		
-	],200); 
 	}
 
 }
