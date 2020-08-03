@@ -38,7 +38,8 @@ class JobController extends Controller
     {
         
         $validator = Validator::make($request->all(), [ 
-			'task_title' => 'required',
+            'job_type' => 'required',
+            'task_title' => 'required',
 			'nature_of_task' => 'required', 
 			'deliverables' => 'required', 
 			'from' => 'required',
@@ -63,8 +64,10 @@ class JobController extends Controller
         }
         
         $arr = [
+            'job_type' => $request->job_type,
             'task_title' => $request->task_title,
             'nature_of_task' => $request->nature_of_task,
+            'brief' => $request->brief,
             'deliverables' => $request->deliverables,
             'created_by' => $request->created_by,
             'department_id' => $request->department_id,
@@ -125,9 +128,11 @@ class JobController extends Controller
         else{ $attachment = Job::find($id)->attachment; }
 
         $arr = [
+            'job_type' => $request->job_type,
             'task_title' => $request->task_title,
             'nature_of_task' => $request->nature_of_task,
             'deliverables' => $request->deliverables,
+            'brief' => $request->brief,
             'department_id' => $request->department_id,
             '_from' => $request->from,
             '_to' => $request->to,

@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
     protected $fillable = [
+        'job_type',
         'task_title', 
         'nature_of_task', 
         'deliverables', 
+        'brief',
         'district_id', 
         'status_id', 
         'created_by',
@@ -54,5 +56,7 @@ class Job extends Model
 //        'deliverables' => 'array',
         // '_from' => 'datetime:d-M-y',
         // '_to' => 'datetime:d-M-y'
+        // 'job_type' => 'boolean',
+        'created_at' => 'datetime:d-M-y'
     ];
 }
