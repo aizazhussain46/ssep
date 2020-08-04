@@ -33,6 +33,20 @@ class JobController extends Controller
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
+    public function btl_records()
+    {
+
+        $jobs = Job::orderBy('id', 'DESC')->where('job_type',2)->get();
+
+        foreach($jobs as $job){
+            $job->created_by_user = $job->created_by_user;
+            $job->assigned_to_user = $job->assigned_to_user;
+            $job->department = $job->department;
+            $job->status = $job->status;
+            $job->district = $job->district;
+        }
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
+    }
 
     public function store(Request $request)
     {
@@ -101,7 +115,7 @@ class JobController extends Controller
 
     public function show($id)
     {
-        $job = Job::where('jobs.id', $id)->first();
+        $job = Job::where('id', $id)->first();
 
         $job->created_by_user = $job->created_by_user;
         $job->assigned_to_user = $job->assigned_to_user;

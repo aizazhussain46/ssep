@@ -19,6 +19,7 @@ Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
 Route::resource('department', 'DepartmentController');
 Route::resource('job', 'JobController');
+Route::get('btl_records', 'JobController@btl_records');
 Route::post('update_job/{id}', 'JobController@update_job');
 
 Route::resource('revision', 'RevisionController');
