@@ -31,7 +31,7 @@ class AuthController extends Controller
 			'email' => $request->email, 
 			'password' => $request->password, 
 			'isActive' => 1,
-			'department_id' => 6
+			'department_id' => 5
 			]);
 	
 		}

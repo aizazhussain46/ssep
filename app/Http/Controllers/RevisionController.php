@@ -13,36 +13,15 @@ class RevisionController extends Controller
         // $this->middleware('auth:api');
     }
     
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return response()->json(Revision::all());
+        return Revision::all();
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // $validator = Validator::make($request->all(), [ 
-		// 	'role' => 'required'
-		// ]); 
-		// if ($validator->fails()) { 
-
-		// 	return response()->json([
-		// 	'success' => false,
-		// 	'errors' => $validator->errors()
-		// ]); 
-        // }
+    
+     public function store(Request $request){
         
+
         $arr = [
             's_id' => $request->s_id,
             'r_id' => $request->r_id,
@@ -53,7 +32,7 @@ class RevisionController extends Controller
         $created = Revision::create($arr);
 
         if($created){
-            return response()->json(['success' => true, 'data' => $created]);
+            return response()->json(['success' => true, 'data' => Revision::find($created->id)]);
         }
         else{
             return response()->json(['success' => false, 'data' => '']);
@@ -62,40 +41,14 @@ class RevisionController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function revision_by_user(Request $request,$id)
     {
-        $revision = Revision::where('job_id', $id)->get();
+        $revisions = Revision::where('job_id',$id)
+                             ->where([['s_id',$request->s_id],['r_id',$request->r_id]])
+                             ->orWhere([['s_id',$request->r_id],['r_id',$request->s_id]])
+                            // ->orderBy('id','DESC')
+                             ->get();
         
-		return response()->json([ 'success' => true, 'data' => $revision ], 200);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+		return response()->json([ 'success' => true, 'data' => $revisions ], 200);
     }
 }

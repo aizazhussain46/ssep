@@ -22,6 +22,14 @@ class Job extends Model
         '_to'
     ];
 
+    protected $with = [
+        'created_by_user:id,name',
+        'assigned_to_user:id,name',
+        'department:id,department',
+        'status:id,status',
+        'district:id,district'
+    ];
+
     public function created_by_user()
     {
         return $this->belongsTo('App\User','created_by');

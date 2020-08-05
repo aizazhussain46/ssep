@@ -19,10 +19,16 @@ Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
 Route::resource('department', 'DepartmentController');
 Route::resource('job', 'JobController');
+Route::get('jobs_by_assigned_user/{id}', 'JobController@jobs_by_assigned_user');
+Route::get('jobs_by_created_user/{id}', 'JobController@jobs_by_created_user');
 Route::get('btl_records', 'JobController@btl_records');
 Route::post('update_job/{id}', 'JobController@update_job');
+Route::post('update_attachment/{id}', 'JobController@update_attachment');
+
 
 Route::resource('revision', 'RevisionController');
+Route::post('revision_by_user/{id}', 'RevisionController@revision_by_user');
+
 
 
 //Route::post('change_attachment/{id}', 'JobController@change_attachment');

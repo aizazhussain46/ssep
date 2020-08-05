@@ -15,21 +15,29 @@ class JobController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
 	}
   
     public function index()
     {
 
         $jobs = Job::orderBy('id', 'DESC')->get();
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
+    }
 
-        foreach($jobs as $job){
-            $job->created_by_user = $job->created_by_user;
-            $job->assigned_to_user = $job->assigned_to_user;
-            $job->department = $job->department;
-            $job->status = $job->status;
-            $job->district = $job->district;
-        }
+    public function jobs_by_created_user($id)
+    {
+
+        $jobs = Job::orderBy('id', 'DESC')->where('created_by',$id)->get();
+
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
+    }
+
+    public function jobs_by_assigned_user($id)
+    {
+
+        $jobs = Job::orderBy('id', 'DESC')->where('assigned_to',$id)->get();
+
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
@@ -38,13 +46,6 @@ class JobController extends Controller
 
         $jobs = Job::orderBy('id', 'DESC')->where('job_type',2)->get();
 
-        foreach($jobs as $job){
-            $job->created_by_user = $job->created_by_user;
-            $job->assigned_to_user = $job->assigned_to_user;
-            $job->department = $job->department;
-            $job->status = $job->status;
-            $job->district = $job->district;
-        }
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
@@ -95,39 +96,17 @@ class JobController extends Controller
         ];
         
         $created = Job::create($arr);
-       
-        if($created){
 
+        list($status,$data) = $created ? [ true , $created] : [ false , ''] ;
 
-            $created->created_by_user = $created->created_by_user;
-            $created->assigned_to_user = $created->assigned_to_user;
-            $created->department = $created->department;
-            $created->status = $created->status;
-            $created->district = $created->district;
-            
-            return response()->json(['success' => true, 'data' => $created]);
-        }
-        else{
-            return response()->json(['success' => false,'data' => '']);
-        }
+        return response()->json(['success' => $status, 'data' => $data]);
         
     }
 
     public function show($id)
     {
-        $job = Job::where('id', $id)->first();
-
-        $job->created_by_user = $job->created_by_user;
-        $job->assigned_to_user = $job->assigned_to_user;
-        $job->department = $job->department;
-        $job->status = $job->status;
-        $job->district = $job->district;
-        
-		return response()->json([ 'success' => true, 'data' => $job ], 200);
+		return response()->json([ 'success' => true, 'data' => Job::where('id', $id)->first() ]);
     }
-
-    
-
 
 
     public function update_job(Request $request, $id)
@@ -157,21 +136,29 @@ class JobController extends Controller
         
         $updated = Job::where('id', $id)->update($arr); 
 
-        if($updated){
+        list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
 
-            $job = Job::find($id);
+        return response()->json(['success' => $status, 'data' => $data]);
 
-            $job->created_by_user = $job->created_by_user;
-            $job->assigned_to_user = $job->assigned_to_user;
-            $job->department = $job->department;
-            $job->status = $job->status;
-            $job->district = $job->district;
-    
-            return response()->json([ 'success' => true, 'data' => $job ]);
+    }
+
+    public function update_attachment(Request $request, $id)
+    {
+        $attachment = '';
+
+        if($request->hasFile('attachment')){
+           $attachment = $request->attachment->getClientOriginalName();
+           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
+           $attachment = asset('uploads/attachments/' . $attachment);
         }
-        else{
-            return response()->json([ 'success' => false,'data' => '' ]);
-        }
+        else{ $attachment = Job::find($id)->attachment; }
+        
+        $updated = Job::where('id', $id)->update(['attachment' => $attachment]); 
+
+        list($status,$data) = $updated ? [ true , Job::find($id)->attachment ] : [ false , ''] ;
+
+        return response()->json(['success' => $status, 'attachment' => $data]);
+
     }
 
     public function destroy($id)
