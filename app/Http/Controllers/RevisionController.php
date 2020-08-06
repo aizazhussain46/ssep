@@ -44,8 +44,9 @@ class RevisionController extends Controller
     public function revision_by_user(Request $request,$id)
     {
         $revisions = Revision::where('job_id',$id)
-                             ->where([['s_id',$request->s_id],['r_id',$request->r_id]])
-                             ->orWhere([['s_id',$request->r_id],['r_id',$request->s_id]])
+                            //  ->where([['s_id',$request->s_id],['r_id',$request->r_id]])
+                            //  ->orWhere('job_id',$id)
+                            //  ->orWhere([['s_id',$request->r_id],['r_id',$request->s_id]])
                             // ->orderBy('id','DESC')
                              ->get();
         
