@@ -10,7 +10,7 @@ class Revision extends Model
         's_id', 'r_id', 'job_id', 'msg'
     ];
 
-    protected $with = ['sender:id,name','reciever:id,name'];
+    protected $with = ['sender:id,name,master','reciever:id,name'];
 
     public function sender()
     {

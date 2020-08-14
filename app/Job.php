@@ -26,7 +26,7 @@ class Job extends Model
         'created_by_user:id,name',
         'assigned_to_user:id,name',
         'department:id,department',
-        'status:id,status',
+        'status:id,status,keyword',
         'district:id,district'
     ];
 

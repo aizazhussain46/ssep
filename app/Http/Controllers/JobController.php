@@ -24,6 +24,23 @@ class JobController extends Controller
         $jobs = Job::orderBy('id', 'DESC')->get();
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
+    // 
+
+    public function jobs_for_pmu()
+    {
+
+        $jobs = Job::orderBy('id', 'DESC')->whereBetween('status_id',[8,9])->get();
+
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
+    }
+
+    public function jobs_for_client()
+    {
+
+        $jobs = Job::orderBy('id', 'DESC')->where('status_id',9)->get();
+
+		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
+    }
 
     public function jobs_by_created_user($id)
     {
@@ -120,6 +137,9 @@ class JobController extends Controller
         }
         else{ $attachment = Job::find($id)->attachment; }
 
+        
+        $request->job_type != 1 ? $request->department_id = null : $request->district_id = null ;
+
         $arr = [
             'job_type' => $request->job_type,
             'task_title' => $request->task_title,
@@ -158,6 +178,14 @@ class JobController extends Controller
         list($status,$data) = $updated ? [ true , Job::find($id)->attachment ] : [ false , ''] ;
 
         return response()->json(['success' => $status, 'attachment' => $data]);
+
+    }
+
+    public function send_to_pmu(Request $request, $id)
+    {
+        $updated = Job::where('id', $id)->update(['status_id' => 8]); 
+
+        return response()->json([ 'success' => $updated ? true : false ]);
 
     }
 

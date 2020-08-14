@@ -19,12 +19,20 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('secret')
         ]);
 
+        \DB::table('users')->insert([
+            'master' => 1,
+            'name' => 'pmu',
+            'email' => 'pmu@ord.com',
+            'password' => bcrypt('secret')
+        ]);
+
         $roles = [ 
             ['role' => 'Team Sub Head'],
             ['role' => 'User'],
             ['role' => 'Sub User'],
             ['role' => 'Partner 1'],
             ['role' => 'Partner 2'],
+            ['role' => 'Client'],
         ];
         \DB::table('roles')->insert($roles);
 
@@ -36,6 +44,8 @@ class DatabaseSeeder extends Seeder
             ['status' => 'Work in Progess','keyword' => 'Work in Progess'],
             ['status' => 'Completed','keyword' => 'Complete'],
             ['status' => 'Pending','keyword' => 'Pending'],
+            ['status' => 'pmu','keyword' => 'shared with PMU'],
+            ['status' => 'client','keyword' => 'shared with Client'],
         ];
         \DB::table('statuses')->insert($statuses);
 

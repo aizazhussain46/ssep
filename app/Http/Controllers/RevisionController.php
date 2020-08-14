@@ -41,15 +41,23 @@ class RevisionController extends Controller
 
     }
 
-    public function revision_by_user(Request $request,$id)
+    public function revision(Request $request,$id)
     {
-        $revisions = Revision::where('job_id',$id)
-                            //  ->where([['s_id',$request->s_id],['r_id',$request->r_id]])
-                            //  ->orWhere('job_id',$id)
-                            //  ->orWhere([['s_id',$request->r_id],['r_id',$request->s_id]])
-                            // ->orderBy('id','DESC')
-                             ->get();
-        
-		return response()->json([ 'success' => true, 'data' => $revisions ], 200);
+
+        // SELECT * FROM `revisions` WHERE 
+        // `job_id` = 6 AND `s_id` = 4 AND `r_id` = 2 
+        //  OR 
+        // `job_id` = 6 AND `s_id` = 2 AND `r_id` = 4
+
+        $s = $request->s_id;
+        $r = $request->r_id;
+
+        $revisions = Revision::where('job_id',$id)->where('s_id',$s)->where('r_id',$r)
+        ->orWhere('job_id',$id)->where('s_id',$r)->where('r_id',$s)        
+        ->get();
+
+        return response()->json([ 'success' => true, 'data' => $revisions ], 200);
     }
+
+ 
 }
