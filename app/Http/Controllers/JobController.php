@@ -37,15 +37,15 @@ class JobController extends Controller
     public function jobs_for_client()
     {
 
-        $jobs = Job::orderBy('id', 'DESC')->where('status_id',9)->get();
+        $jobs = Job::orderBy('id', 'DESC')->where('status_id',10)->get();
 
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
-    public function jobs_by_created_user($id)
+    public function jobs_by_created_and_assigned($id)
     {
 
-        $jobs = Job::orderBy('id', 'DESC')->where('created_by',$id)->get();
+        $jobs = Job::orderBy('id', 'DESC')->where('created_by',$id)->orWhere('assigned_to',$id)->get();
 
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
@@ -125,6 +125,12 @@ class JobController extends Controller
 		return response()->json([ 'success' => true, 'data' => Job::where('id', $id)->first() ]);
     }
 
+    public function get_job_count($id = null)
+    {        
+		return $id ? Job::where('job_type', $id)->count() : Job::count();
+    }
+
+  
 
     public function update_job(Request $request, $id)
     {
@@ -162,6 +168,15 @@ class JobController extends Controller
 
     }
 
+    public function change_status(Request $request, $id)
+    {
+
+
+        $updated = Job::where('id', $id)->update(['status_id' =>  $request->sw ? 2 : 4]); 
+
+        return response()->json(['success' => $updated ? true : false]);
+    }
+
     public function update_attachment(Request $request, $id)
     {
         $attachment = '';
@@ -181,11 +196,15 @@ class JobController extends Controller
 
     }
 
-    public function send_to_pmu(Request $request, $id)
+    public function share(Request $request, $id)
     {
-        $updated = Job::where('id', $id)->update(['status_id' => 8]); 
+        $role_id = User::find($request->user_id)->role_id;
 
-        return response()->json([ 'success' => $updated ? true : false ]);
+        $updated = Job::where('id', $id)->update(['status_id' => !$role_id ? 9 : 10]); 
+
+        list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
+
+        return response()->json(['success' => $status, 'data' => $data]);
 
     }
 

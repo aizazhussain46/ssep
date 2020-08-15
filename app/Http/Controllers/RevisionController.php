@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Revision;
 use Validator;
+use App\Job;
 
 class RevisionController extends Controller
 {
@@ -32,7 +33,16 @@ class RevisionController extends Controller
         $created = Revision::create($arr);
 
         if($created){
-            return response()->json(['success' => true, 'data' => Revision::find($created->id)]);
+
+            $updated = Job::where('id', $request->job_id)->update(['status_id' => 3]); 
+
+            if($updated){
+                return response()->json(['success' => true, 'data' => Revision::find($created->id)]);
+            }
+            else{
+                return response()->json(['success' => false, 'data' => '']);
+            }
+
         }
         else{
             return response()->json(['success' => false, 'data' => '']);

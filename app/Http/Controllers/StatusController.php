@@ -16,7 +16,7 @@ class StatusController extends Controller
  
     public function index()
     {
-        return Status::orderBy('id','DESC')->get();
+        return Status::all();
     }
 
 

@@ -12,21 +12,26 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 //        $this->call(UserSeeder::class);
-        \DB::table('users')->insert([
-            'master' => 1,
-            'name' => 'master',
-            'email' => 'master@erp.com',
-            'password' => bcrypt('secret')
-        ]);
 
-        \DB::table('users')->insert([
-            'master' => 1,
-            'name' => 'pmu',
-            'email' => 'pmu@ord.com',
-            'password' => bcrypt('secret')
-        ]);
+        $users = [ 
+            [
+                'master' => 1,
+                'name' => 'master',
+                'email' => 'master@erp.com',
+                'password' => bcrypt('secret')
+            ],
+            [
+                'master' => 1,
+                'name' => 'pmu',
+                'email' => 'pmu@ord.com',
+                'password' => bcrypt('secret')
+            ]
+        ];
+
+        \DB::table('users')->insert($users);
 
         $roles = [ 
+            ['role' => 'Team Head'],
             ['role' => 'Team Sub Head'],
             ['role' => 'User'],
             ['role' => 'Sub User'],
@@ -38,14 +43,16 @@ class DatabaseSeeder extends Seeder
 
         $statuses = [ 
             ['status' => 'Initiated','keyword' => 'Initiate'],
-            ['status' => 'Approved','keyword' => 'Approve'],
-            ['status' => 'Rejected','keyword' => 'Reject'],
-            ['status' => 'On Hold','keyword' => 'On Hold'],
             ['status' => 'Work in Progess','keyword' => 'Work in Progess'],
+            ['status' => 'On Revision','keyword' => 'On Revision'],
+            ['status' => 'On Hold','keyword' => 'On Hold'],
+            ['status' => 'Rejected','keyword' => 'Reject'],
+            ['status' => 'Approved','keyword' => 'Approve'],
             ['status' => 'Completed','keyword' => 'Complete'],
             ['status' => 'Pending','keyword' => 'Pending'],
-            ['status' => 'pmu','keyword' => 'shared with PMU'],
-            ['status' => 'client','keyword' => 'shared with Client'],
+            ['status' => 'PMU','keyword' => 'shared with PMU'],
+            ['status' => 'Client','keyword' => 'shared with Client'],
+            ['status' => 'Closed','keyword' => 'Closed'],
         ];
         \DB::table('statuses')->insert($statuses);
 

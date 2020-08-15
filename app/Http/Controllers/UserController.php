@@ -109,6 +109,47 @@ class UserController extends Controller
         return response()->json(['success' => $response] );
     }
 
+    public function admins()
+    {
+        $data = User::where('master',1)->where('id','!=',1)->orWhere('role_id',7)->get();
+        return response()->json(['success' => true,'data' => $data]);
+    }
+
+   public function user_2be_assigned($id,$master,$role_id)
+   {
+        $data = [];
+
+        if($master){
+            $data = User::where('id','!=',$id)->where('master',1)
+            ->where('role_id',1)
+            ->where('role_id',2)
+            ->where('role_id',3)
+            ->where('role_id',4)
+            ->get();
+        }
+        else{
+           if($role_id == 1){
+            $data = User::where('master',0)
+            ->where('role_id','!=',1)
+            ->where('role_id',2)
+            ->orWhere('role_id',3)
+            ->orWhere('role_id',4)
+            ->get();
+           }
+           else if($role_id == 2){
+            $data = User::where('id','!=',$id)->where('role_id',2)->orWhere('role_id',3)->orWhere('role_id',4)->get();
+           }
+           else if($role_id == 3){
+            $data = User::where('role_id',4)->get();
+           }
+        }
+
+       return response()->json(['success' => true,'data' => $data]);
+
+
+
+
+   } 
    
     public function destroy($id)
     {
