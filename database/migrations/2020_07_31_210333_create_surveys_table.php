@@ -50,7 +50,7 @@ class CreateSurveysTable extends Migration
             $table->string('other_hours')->nullable();
             $table->longText('feedback')->nullable();
             $table->integer('district_id')->nullable();
-            $table->integer('attachment')->nullable();
+            $table->string('attachment')->nullable();
             $table->integer('job_id');
             $table->integer('user_id');          
             $table->timestamps();

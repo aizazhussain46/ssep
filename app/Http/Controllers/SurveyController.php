@@ -38,6 +38,15 @@ class SurveyController extends Controller
         // $s = Survey::create(['user_id' => 1,'survey_field' => json_encode($request->all())]);
         // return $s ? 200 : 201;
         // die;
+
+        $attachment = asset('uploads/attachments/no-img.png');
+
+        if($request->hasFile('attachment')){
+           $attachment = $request->attachment->getClientOriginalName();
+           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
+           $attachment = asset('uploads/attachments/' . $attachment);
+        }
+
         $arr = [
             'name' => $request->name,
             'address' => $request->address,
@@ -75,7 +84,8 @@ class SurveyController extends Controller
             'feedback' => $request->feedback,
             'user_id' => $request->user_id,
             'job_id' => $request->job_id,
-            'district_id' => $request->district_id
+            'district_id' => $request->district_id,
+            'attachment' => $attachment
         ];
     //    echo json_encode($arr);
     //    die;
