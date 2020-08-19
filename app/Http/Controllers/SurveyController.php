@@ -40,11 +40,15 @@ class SurveyController extends Controller
         // die;
 
         $attachment = asset('uploads/attachments/no-img.png');
-
-        if($request->hasFile('attachment')){
-           $attachment = $request->attachment->getClientOriginalName();
-           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
-           $attachment = asset('uploads/attachments/' . $attachment);
+        $attach = $request->attachment;
+        if($attach){
+        $type = explode(",", $attach);
+        $filename = 'attach_'.uniqid().'.'.$type[0];
+        
+        $ifp = fopen( public_path('uploads/attachments/'.$filename), 'wb' ); 
+        fwrite( $ifp, base64_decode($type[1]));
+        fclose( $ifp );
+        $attachment = asset('uploads/attachments/'.$filename); 
         }
 
         $arr = [
@@ -54,7 +58,7 @@ class SurveyController extends Controller
             'or' => $request->or,
             'lot' => $request->lot,
             'rooms'  => $request->rooms,
-            'fms' => $request->fms,
+            'fms' => json_encode($request->fms),
             'nprw' => $request->nprw,
             'distance' => $request->distance,
             'occupation' => $request->occupation,
@@ -87,8 +91,9 @@ class SurveyController extends Controller
             'district_id' => $request->district_id,
             'attachment' => $attachment
         ];
-    //    echo json_encode($arr);
-    //    die;
+        //echo json_encode($arr);
+        //print_r($request->all());
+        //die;
         $created = Survey::create($arr);
 
 
