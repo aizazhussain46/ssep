@@ -61,8 +61,9 @@ class RevisionController extends Controller
 
         $s = $request->s_id;
         $r = $request->r_id;
-
-        $revisions = Revision::where('job_id',$id)->where('s_id',$s)->where('r_id',$r)
+	
+        $revisions = Revision::where('job_id',$id)
+        ->where('s_id',$s)->where('r_id',$r)
         ->orWhere('job_id',$id)->where('s_id',$r)->where('r_id',$s)        
         ->get();
 

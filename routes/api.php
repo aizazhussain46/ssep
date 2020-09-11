@@ -37,7 +37,7 @@ Route::post('change_status/{id}', 'JobController@change_status');
 
 
 Route::resource('revision', 'RevisionController');
-Route::post('revision/{id}', 'RevisionController@revision');
+Route::post('revisions/{id}', 'RevisionController@revision');
 
 //Route::post('change_attachment/{id}', 'JobController@change_attachment');
 
