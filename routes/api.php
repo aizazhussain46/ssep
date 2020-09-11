@@ -10,7 +10,9 @@ Route::post('login', 'AuthController@login');
 // for tab user login
 Route::post('btl/login', 'AuthController@btl_login');
 
-
+Route::get('demo', function(){
+    echo "Api working";
+});
 Route::resource('user', 'UserController');
 Route::get('admins', 'UserController@admins');
 Route::get('user_2be_assigned/{id}/{master}/{role_id?}', 'UserController@user_2be_assigned');
