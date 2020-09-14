@@ -31,12 +31,17 @@ class RevisionController extends Controller
         ];
 
         $created = Revision::create($arr);
-
+        $flag = false;
         if($created){
-
-            $updated = Job::where('id', $request->job_id)->update(['status_id' => 3]); 
-
-            if($updated){
+            if($request->s_id == 9 || $request->r_id == 9){
+                $flag = true;
+            }
+            else{
+                $flag = true;
+                $updated = Job::where('id', $request->job_id)->update(['status_id' => 3]); 
+            }
+            
+            if($flag){
                 return response()->json(['success' => true, 'data' => Revision::find($created->id)]);
             }
             else{
