@@ -33,7 +33,7 @@ class RevisionController extends Controller
         $created = Revision::create($arr);
         $flag = false;
         if($created){
-            if($request->s_id == 9 || $request->r_id == 9){
+            if($request->s_id == 2 || $request->r_id == 2){
                 $flag = true;
             }
             else{
