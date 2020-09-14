@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Survey;
+use App\Job;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -95,7 +96,9 @@ class SurveyController extends Controller
         //print_r($request->all());
         //die;
         $created = Survey::create($arr);
-
+        if($created){
+            $update_job = Job::where('id', $request->job_id)->update(['status_id'=>7]);
+        }
 
         return response()->json([
 			'status_code' => $created ? 200 : 201
