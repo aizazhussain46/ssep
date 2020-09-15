@@ -149,9 +149,6 @@ class UserController extends Controller
 
        return response()->json(['success' => true,'data' => $data]);
 
-
-
-
    } 
    
     public function destroy($id)

@@ -18,6 +18,7 @@ Route::get('admins', 'UserController@admins');
 Route::get('user_2be_assigned/{id}/{master}/{role_id?}', 'UserController@user_2be_assigned');
 Route::post('change_password/{id}', 'UserController@change_password');
 Route::resource('survey', 'SurveyController');
+Route::get('survey_by_job/{job_id}', 'SurveyController@survey_by_job');
 Route::resource('role', 'RoleController');
 Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
