@@ -171,10 +171,15 @@ class JobController extends Controller
     public function change_status(Request $request, $id)
     {
 
-
+        $data = '';
         $updated = Job::where('id', $id)->update(['status_id' =>  $request->sw ? 2 : 4]); 
-
-        return response()->json(['success' => $updated ? true : false]);
+        if($updated){
+            $data = Job::find($id);
+        }
+        else{
+            $data = array();
+        }
+        return response()->json(['success' => $updated ? true : false, 'data'=>$data]);
     }
 
     public function update_attachment(Request $request, $id)
