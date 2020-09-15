@@ -22,6 +22,7 @@ Route::resource('role', 'RoleController');
 Route::resource('status', 'StatusController');
 Route::resource('district', 'DistrictController');
 Route::resource('department', 'DepartmentController');
+Route::get('dept_ex_btl', 'DepartmentController@departments_except_btl');
 Route::resource('job', 'JobController');
 Route::get('jobs_by_assigned_user/{id}', 'JobController@jobs_by_assigned_user');
 Route::get('jobs_by_created_and_assigned/{id}', 'JobController@jobs_by_created_and_assigned');

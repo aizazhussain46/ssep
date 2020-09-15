@@ -69,4 +69,9 @@ class DepartmentController extends Controller
                 ? [ 'response_status' => true, 'message' => 'Department has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'Department cannot delete' ];
     }
+
+    public function departments_except_btl()
+    {
+        return Department::orderBy('id','DESC')->whereNotIn('id', array(5))->get();
+    }
 }
