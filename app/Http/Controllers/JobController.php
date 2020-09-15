@@ -195,11 +195,7 @@ class JobController extends Controller
         
         $updated = Job::where('id', $id)->update(['attachment' => $attachment]); 
 
-//        list($status,$data) = $updated ? [ true , Job::find($id)->attachment ] : [ false , ''] ;
-
-        list($status,$data) = $updated ? [ true , Job::find($id)->attachment ] : [ false , Job::find($id)->attachment] ;
-
-        return response()->json(['success' => $status, 'attachment' => $data]);
+        return response()->json(['success' =>  $updated ? true : false, 'attachment' => $attachment]);
 
     }
 
