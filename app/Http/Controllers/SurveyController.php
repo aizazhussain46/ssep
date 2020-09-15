@@ -125,6 +125,7 @@ class SurveyController extends Controller
     public function survey_by_job($job_id)
     {
         $survey = Survey::where('job_id', $job_id)->first();
+        $survey->fms = json_decode($survey->fms);
         return $survey;
     }
 
