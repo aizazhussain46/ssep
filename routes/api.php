@@ -29,6 +29,7 @@ Route::get('jobs_by_assigned_user/{id}', 'JobController@jobs_by_assigned_user');
 Route::get('jobs_by_created_and_assigned/{id}', 'JobController@jobs_by_created_and_assigned');
 Route::get('jobs_for_pmu', 'JobController@jobs_for_pmu');
 Route::get('jobs_for_client', 'JobController@jobs_for_client');
+Route::get('approve_reject/{job_id}/{action}', 'JobController@approve_reject');
 
 Route::get('get_job_count/{id?}', 'JobController@get_job_count');
 

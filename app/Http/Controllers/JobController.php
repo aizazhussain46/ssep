@@ -29,7 +29,7 @@ class JobController extends Controller
     public function jobs_for_pmu()
     {
 
-        $jobs = Job::orderBy('id', 'DESC')->whereBetween('status_id',[8,9])->get();
+        $jobs = Job::orderBy('id', 'DESC')->whereIn('status_id',[1,2,3,4,6,7,8,9,10])->get();
 
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
@@ -106,7 +106,7 @@ class JobController extends Controller
             '_from' => $request->from,
             '_to' => $request->to,
             'district_id' => $request->district_id,
-            'status_id' => 1,
+            'status_id' => 8,
             'attachment' => $attachment,
             'assigned_to' => $request->assigned_to
 
@@ -179,6 +179,24 @@ class JobController extends Controller
         else{
             $data = array();
         }
+        return response()->json(['success' => $updated ? true : false, 'data'=>$data]);
+    }
+    public function approve_reject($id, $action)
+    {
+        $data = '';
+        if($action == 'a'){
+            $updated = Job::where('id', $id)->update(['status_id' => 6]); 
+        }
+        else{
+            $updated = Job::where('id', $id)->update(['status_id' => 5]); 
+        }
+        if($updated){
+            $data = Job::find($id);
+        }
+        else{
+            $data = array();
+        }
+        
         return response()->json(['success' => $updated ? true : false, 'data'=>$data]);
     }
 
