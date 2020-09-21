@@ -114,7 +114,7 @@ class UserController extends Controller
 
     public function admins()
     {
-        $data = User::where('master',1)->where('id','!=',1)->orWhere('role_id',7)->get();
+        $data = User::where('master',1)->where('id','!=',1)->get();
         return response()->json(['success' => true,'data' => $data]);
     }
 

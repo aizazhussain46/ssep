@@ -237,4 +237,18 @@ class JobController extends Controller
                 ? [ 'response_status' => true, 'message' => 'Job has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'Job cannot delete' ] ;
     }
+
+    public function complete_job($id)
+    {
+
+        $data = '';
+        $updated = Job::where('id', $id)->update(['status_id' => 7]); 
+        if($updated){
+            $data = Job::find($id);
+        }
+        else{
+            $data = array();
+        }
+        return response()->json(['success' => $updated ? true : false, 'data'=>$data]);
+    }
 }
