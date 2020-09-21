@@ -107,8 +107,7 @@ class JobController extends Controller
             '_to' => $request->to,
             'district_id' => $request->district_id,
             'status_id' => 8,
-            'attachment' => $attachment,
-            'assigned_to' => $request->assigned_to
+            'attachment' => $attachment
 
         ];
         
@@ -160,6 +159,9 @@ class JobController extends Controller
             'attachment' => $attachment
         ];
         
+        if($request->assigned_to){
+            $arr['status_id'] = 1;
+        }
         $updated = Job::where('id', $id)->update($arr); 
 
         list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
