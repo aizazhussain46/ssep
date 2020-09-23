@@ -162,4 +162,8 @@ class UserController extends Controller
         $data = User::whereIn('role_id',[1,2])->get();
         return response()->json(['success' => true,'data' => $data]);
     }
+    public function assigned_to_users(){
+        $data = User::whereIn('role_id',[3,4])->get();
+        return response()->json(['success' => true,'data' => $data]);
+    }
 }

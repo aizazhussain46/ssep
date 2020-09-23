@@ -43,6 +43,7 @@ Route::post('update_attachment/{id}', 'JobController@update_attachment');
 Route::post('change_status/{id}', 'JobController@change_status');
 
 Route::get('created_by_users', 'UserController@created_by_users');
+Route::get('assigned_to_users', 'UserController@assigned_to_users');
 
 Route::resource('revision', 'RevisionController');
 Route::post('revisions/{id}', 'RevisionController@revision');
