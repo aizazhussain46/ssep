@@ -157,4 +157,9 @@ class UserController extends Controller
                 ? [ 'response_status' => true, 'message' => 'user has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'user cannot delete' ];
     }
+
+    public function created_by_users(){
+        $data = User::whereIn('role_id',[1,2])->get();
+        return response()->json(['success' => true,'data' => $data]);
+    }
 }

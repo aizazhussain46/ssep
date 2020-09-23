@@ -42,6 +42,7 @@ Route::post('share/{id}', 'JobController@share');
 Route::post('update_attachment/{id}', 'JobController@update_attachment');
 Route::post('change_status/{id}', 'JobController@change_status');
 
+Route::get('created_by_users', 'UserController@created_by_users');
 
 Route::resource('revision', 'RevisionController');
 Route::post('revisions/{id}', 'RevisionController@revision');
@@ -51,3 +52,6 @@ Route::post('revisions/{id}', 'RevisionController@revision');
 /*--------------------------- Reporting -----------------------------------------*/
 Route::get('Jobs_filter', 'ReportController@index');
 Route::get('surveys_filter', 'ReportController@survey');
+
+
+Route::get('send_email', 'JobController@send_email');
