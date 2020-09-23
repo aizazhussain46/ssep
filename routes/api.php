@@ -36,7 +36,7 @@ Route::get('complete_job/{job_id}', 'JobController@complete_job');
 Route::get('get_job_count/{id?}', 'JobController@get_job_count');
 
 
-Route::get('btl_records', 'JobController@btl_records');
+Route::get('btl_records/{user_id}', 'JobController@btl_records');
 Route::post('update_job/{id}', 'JobController@update_job');
 Route::post('share/{id}', 'JobController@share');
 Route::post('update_attachment/{id}', 'JobController@update_attachment');
@@ -50,3 +50,4 @@ Route::post('revisions/{id}', 'RevisionController@revision');
 
 /*--------------------------- Reporting -----------------------------------------*/
 Route::get('Jobs_filter', 'ReportController@index');
+Route::get('surveys_filter', 'ReportController@survey');

@@ -57,10 +57,9 @@ class JobController extends Controller
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
-    public function btl_records()
+    public function btl_records($user_id)
     {
-
-        $jobs = Job::orderBy('id', 'DESC')->where('job_type',2)->get();
+        $jobs = Job::orderBy('id', 'DESC')->where('assigned_to', $user_id)->where('job_type',2)->whereIn('status_id',[1,2,3,6,9])->get();
 
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }

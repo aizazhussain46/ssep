@@ -91,5 +91,64 @@ class ReportController extends Controller
         ->orderBy('id', 'DESC')->get();
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
+
+    public function survey(Request $request){
+        $created_by = $request->created_by;
+        $district = $request->district;
+        $timestamp = $request->timestamp;
+        $from = $request->from;
+        $to = $request->to;
+        $job = $request->job;
+        $args = array();
+        $user_id = $request->created_by;
+        if($user_id){
+                $user = User::find($user_id);
+                if($user->master == 1){
+                }
+                else{
+                    $created_by = $user_id;
+                }
+        }
+        $now = date('Y-m-d', strtotime('+1 day'));
+        $bw = array('', $now);
+        if($timestamp){
+            if($timestamp == 'today'){
+                $today = date('Y-m-d');
+                $args[] = array('created_at', '>', $today);
+            }
+            else if($timestamp == 'week'){
+                $week = date('Y-m-d', strtotime('-1 week'));
+                $args[] = array('created_at', '>=', $week);
+            }
+            else if($timestamp == 'month'){
+                $month = date('Y-m-d', strtotime('-1 month'));
+                $args[] = array('created_at', '>=', $month); 
+            }
+            else if ($timestamp == 'year'){
+                $year = date('Y-m-d', strtotime('-1 year'));
+                $args[] = array('created_at', '>=', $year); 
+            }
+        }
+        else if($from && $to){
+            $from = date('Y-m-d', strtotime($from));
+            $to = date('Y-m-d', strtotime($to.' +1 day'));
+            $bw = array($from, $to);
+        }
+        
+        if($created_by){
+            $args[] = array('user_id', '=', $created_by);
+        }
+        if($district){
+            $args[] = array('district_id', '=', $district);
+        }
+        if($job){
+            $args[] = array('job_id', '=', $job);
+        }
+
+        $surveys = Survey::where($args)
+        ->whereBetween('created_at', $bw)
+        ->orderBy('id', 'DESC')->get();
+        return response()->json([ 'success' => true, 'data' => $surveys ] ,200);
+    }
   
 }
