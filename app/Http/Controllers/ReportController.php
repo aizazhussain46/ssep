@@ -20,7 +20,7 @@ class ReportController extends Controller
         //$this->middleware('auth:api');
     }
     public function index(Request $request){
-        $type = $request->type;
+        $type = $request->job_type;
         $status = $request->status;
         $department = $request->department;
         $created_by = $request->created_by;
@@ -89,6 +89,25 @@ class ReportController extends Controller
         $jobs = Job::where($args)
         ->whereBetween('created_at', $bw)
         ->orderBy('id', 'DESC')->get();
+
+
+        foreach($jobs as $job){ 
+            if($job->department){
+                $job->department_name = $job->department->department;
+            }
+            if($job->district){
+                $job->district_name = $job->district->district;
+            }
+            if($job->assigned_to_user){
+                $job->assigned_name = $job->assigned_to_user->name;
+            }
+            $job->created_name = $job->created_by_user->name;        
+            $job->status_name = $job->status->status;
+            $job->keyword_name = $job->status->keyword;
+            //dump($job->status);
+        }
+        
+        //dd($job);
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
 
