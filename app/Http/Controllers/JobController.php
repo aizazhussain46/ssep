@@ -24,7 +24,6 @@ class JobController extends Controller
         $jobs = Job::orderBy('id', 'DESC')->get();
 		return response()->json([ 'success' => true, 'data' => $jobs ] ,200);
     }
-    // 
 
     public function jobs_for_pmu()
     {
