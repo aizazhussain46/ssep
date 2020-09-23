@@ -17,7 +17,7 @@ class ReportController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth:api');
+        //$this->middleware('auth:api');
     }
     public function index(Request $request){
         $type = $request->type;
@@ -30,6 +30,17 @@ class ReportController extends Controller
         $from = $request->from;
         $to = $request->to;
         $args = array();
+        $user_id = $request->user_id;
+        $user = User::find($user_id);
+        if($user->master == 1){
+        }
+        else if($user->role_id == 1 || $user->role_id == 2){
+            $created_by = $user_id;
+        }
+        else{
+            $assigned_to = $user_id;
+        }
+
         $now = date('Y-m-d', strtotime('+1 day'));
         $bw = array('', $now);
         if($timestamp){
