@@ -32,9 +32,9 @@ class ReportController extends Controller
         $args = array();
         $user_id = $request->user_id;
         $user = User::find($user_id);
-        if($user->master == 1){
+        if($user->master == 1 || $user->role_id == 1){
         }
-        else if($user->role_id == 1 || $user->role_id == 2){
+        else if($user->role_id == 2){
             $created_by = $user_id;
         }
         else{
