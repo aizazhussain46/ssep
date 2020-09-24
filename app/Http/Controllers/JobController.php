@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Mail;
+use App\Mail\Emailsend;
 use App\User;
 use App\Role;
 use App\Status;
@@ -110,7 +112,17 @@ class JobController extends Controller
         ];
         
         $created = Job::create($arr);
-
+        if($created){
+            $job = Job::find($created->id);
+            $to = $job->created_by_user->email;
+            $subject = "New Job";
+            $message = "Job has been created successfully. Job created by ".$job->created_by_user->name;
+            $mail = Mail::to($to)->send(new Emailsend($message, $subject));
+            // $message = "Job has been created successfully";
+            // $mail = Mail::to("aizaz.hussain@orangeroomdigital.com")->send(new Emailsend($to, $subject));
+           
+        }
+        
         list($status,$data) = $created ? [ true , $created] : [ false , ''] ;
 
         return response()->json(['success' => $status, 'data' => $data]);
@@ -156,12 +168,21 @@ class JobController extends Controller
             'assigned_to' => $request->assigned_to,
             'attachment' => $attachment
         ];
-        
-        if($request->assigned_to){
-            $arr['status_id'] = 1;
+        $flag = false;
+        $job = Job::find($id);
+        if($request->assigned_to != $job->assigned_to){
+            $arr['status_id'] = 3;
+            $flag = true;
         }
         $updated = Job::where('id', $id)->update($arr); 
-
+        if($updated && $flag){
+            $job = Job::find($id);
+            $to = $job->assigned_to_user->email;
+            $bcc = $job->created_by_user->email;
+            $subject = "Job Assigned";
+            $message = "Job has been assigned to ".$job->assigned_to_user->name;
+            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+        }
         list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
 
         return response()->json(['success' => $status, 'data' => $data]);
@@ -175,6 +196,11 @@ class JobController extends Controller
         $updated = Job::where('id', $id)->update(['status_id' =>  $request->sw ? 2 : 4]); 
         if($updated){
             $data = Job::find($id);
+            $bcc = $data->assigned_to_user->email ?? '';
+            $to = $data->created_by_user->email;
+            $subject = "Status Updated";
+            $message = "Status has been updated successfully.";
+            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
         }
         else{
             $data = array();
@@ -185,13 +211,19 @@ class JobController extends Controller
     {
         $data = '';
         if($action == 'a'){
+            $subject = "Job Approved";
+            $message = "Job has been Approved successfully.";
             $updated = Job::where('id', $id)->update(['status_id' => 6]); 
         }
         else{
+            $subject = "Job Rejected";
+            $message = "Job has been Rejected.";
             $updated = Job::where('id', $id)->update(['status_id' => 5]); 
         }
         if($updated){
             $data = Job::find($id);
+            $to = $data->created_by_user->email;
+            $mail = Mail::to($to)->send(new Emailsend($message, $subject));
         }
         else{
             $data = array();
@@ -212,7 +244,14 @@ class JobController extends Controller
         else{ $attachment = Job::find($id)->attachment; }
         
         $updated = Job::where('id', $id)->update(['attachment' => $attachment]); 
-
+        if($updated){
+            $data = Job::find($id);
+            $bcc = $data->assigned_to_user->email ?? '';
+            $to = $data->created_by_user->email;
+            $subject = "Attachment Updated";
+            $message = "Attachment has been updated successfully.";
+            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+        }
         return response()->json(['success' =>  $updated ? true : false, 'attachment' => $attachment]);
 
     }
@@ -222,7 +261,14 @@ class JobController extends Controller
         $role_id = User::find($request->user_id)->role_id;
 
         $updated = Job::where('id', $id)->update(['status_id' => !$role_id ? 9 : 10]); 
-
+        if($updated){
+            $job = Job::find($id);
+            $bcc = $job->assigned_to_user->email ?? '';
+            $to = $job->created_by_user->email;
+            $subject = "Job Shared";
+            $message = "Job has been Shared Successfully.";
+            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+        }
         list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
 
         return response()->json(['success' => $status, 'data' => $data]);
@@ -231,7 +277,15 @@ class JobController extends Controller
 
     public function destroy($id)
     {
-        return (Job::find($id)->delete()) 
+        $delete = Job::find($id)->delete();
+        if($delete){
+            $job = Job::find($id);
+            $to = $job->created_by_user->email;
+            $subject = "Job Deleted";
+            $message = "Job has been Deleted Successfully.";
+            $mail = Mail::to($to)->send(new Emailsend($message, $subject));
+        }
+        return ($delete) 
                 ? [ 'response_status' => true, 'message' => 'Job has been deleted' ] 
                 : [ 'response_status' => false, 'message' => 'Job cannot delete' ] ;
     }
@@ -243,10 +297,26 @@ class JobController extends Controller
         $updated = Job::where('id', $id)->update(['status_id' => 7]); 
         if($updated){
             $data = Job::find($id);
+            $to = $data->created_by_user->email;
+            $subject = "Job Completed";
+            $message = "Job has been Completed Successfully.";
+            $mail = Mail::to($to)->send(new Emailsend($message, $subject));
         }
         else{
             $data = array();
         }
         return response()->json(['success' => $updated ? true : false, 'data'=>$data]);
+    }
+
+
+    public function send_email(){
+        // $job = Job::find(1);
+        // echo "<pre>";
+        // return $job->created_by_user->email;
+        //$data = "Job has been created successfully";
+        //$mail = Mail::to($customer_email)->bcc($cs->email)->bcc($driver->email)->send(new Emailsend($data));
+        //$mail = Mail::to("aizaz.hussain@orangeroomdigital.com")->send(new Emailsend($data));
+        //return view('invoice', $data);
+
     }
 }

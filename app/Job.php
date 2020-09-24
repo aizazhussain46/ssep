@@ -23,8 +23,8 @@ class Job extends Model
     ];
 
     protected $with = [
-        'created_by_user:id,name',
-        'assigned_to_user:id,name',
+        'created_by_user:id,name,email',
+        'assigned_to_user:id,name,email',
         'department:id,department',
         'status:id,status,keyword',
         'district:id,district'
