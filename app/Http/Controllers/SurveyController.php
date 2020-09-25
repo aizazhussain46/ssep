@@ -98,6 +98,14 @@ class SurveyController extends Controller
         $created = Survey::create($arr);
         if($created){
             $update_job = Job::where('id', $request->job_id)->update(['status_id'=>7]);
+
+            $job = Job::find($request->job_id);
+            $user = User::find($request->user_id);
+            $to = $job->created_by_user->email;
+            $bcc = $user->email;
+            $subject = "Survey Completed";
+            $message = "Survey has been Completed Successfully.";
+            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
         }
 
         return response()->json([

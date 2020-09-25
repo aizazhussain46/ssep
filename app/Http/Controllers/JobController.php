@@ -103,8 +103,8 @@ class JobController extends Controller
             'deliverables' => $request->deliverables,
             'created_by' => $request->created_by,
             'department_id' => $request->department_id,
-            '_from' => $request->from,
-            '_to' => $request->to,
+            '_from' => $request->from.' '.$request->from_time,
+            '_to' => $request->to.' '.$request->to_time,
             'district_id' => $request->district_id,
             'status_id' => 8,
             'attachment' => $attachment
@@ -162,8 +162,8 @@ class JobController extends Controller
             'deliverables' => $request->deliverables,
             'brief' => $request->brief,
             'department_id' => $request->department_id,
-            '_from' => $request->from,
-            '_to' => $request->to,
+            '_from' => $request->from.' '.$request->from_time,
+            '_to' => $request->to.' '.$request->to_time,
             'district_id' => $request->district_id,
             'assigned_to' => $request->assigned_to,
             'attachment' => $attachment
@@ -277,10 +277,10 @@ class JobController extends Controller
 
     public function destroy($id)
     {
+        $job = Job::find($id);
+        $to = $job->created_by_user->email;
         $delete = Job::find($id)->delete();
         if($delete){
-            $job = Job::find($id);
-            $to = $job->created_by_user->email;
             $subject = "Job Deleted";
             $message = "Job has been Deleted Successfully.";
             $mail = Mail::to($to)->send(new Emailsend($message, $subject));
@@ -315,7 +315,7 @@ class JobController extends Controller
         // return $job->created_by_user->email;
         //$data = "Job has been created successfully";
         //$mail = Mail::to($customer_email)->bcc($cs->email)->bcc($driver->email)->send(new Emailsend($data));
-        //$mail = Mail::to("aizaz.hussain@orangeroomdigital.com")->send(new Emailsend($data));
+        $mail = Mail::to("aizaz.hussain@orangeroomdigital.com")->send(new Emailsend($data, 'Test email SSEP'));
         //return view('invoice', $data);
 
     }
