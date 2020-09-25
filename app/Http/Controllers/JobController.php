@@ -313,7 +313,7 @@ class JobController extends Controller
         // $job = Job::find(1);
         // echo "<pre>";
         // return $job->created_by_user->email;
-        //$data = "Job has been created successfully";
+        $data = "Job has been created successfully";
         //$mail = Mail::to($customer_email)->bcc($cs->email)->bcc($driver->email)->send(new Emailsend($data));
         $mail = Mail::to("aizaz.hussain@orangeroomdigital.com")->send(new Emailsend($data, 'Test email SSEP'));
         //return view('invoice', $data);
