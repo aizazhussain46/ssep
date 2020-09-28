@@ -19,7 +19,9 @@ class Job extends Model
         'department_id', 
         'attachment',
         '_from',
-        '_to'
+        '_to',
+        'from_time',
+        'to_time'
     ];
 
     protected $with = [

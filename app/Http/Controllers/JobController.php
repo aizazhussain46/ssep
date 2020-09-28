@@ -103,8 +103,10 @@ class JobController extends Controller
             'deliverables' => $request->deliverables,
             'created_by' => $request->created_by,
             'department_id' => $request->department_id,
-            '_from' => $request->from.' '.$request->from_time,
-            '_to' => $request->to.' '.$request->to_time,
+            '_from' => $request->from,
+            '_to' => $request->to,
+            'from_time' => $request->from_time,
+            'to_time' => $request->to_time,
             'district_id' => $request->district_id,
             'status_id' => 8,
             'attachment' => $attachment

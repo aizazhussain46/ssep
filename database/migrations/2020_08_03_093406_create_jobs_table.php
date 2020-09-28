@@ -28,6 +28,8 @@ class CreateJobsTable extends Migration
             $table->integer('assigned_to')->nullable();;
             $table->timestamp('_from')->nullable();
             $table->timestamp('_to')->nullable();
+            $table->time('from_time')->nullable();
+            $table->time('to_time')->nullable();
             $table->timestamps();
         });
     }
