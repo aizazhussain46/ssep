@@ -106,6 +106,12 @@ class UserController extends Controller
 
     public function change_password(Request $request,$id)
     {
+        $validator = Validator::make($request->all(), [ 
+			'password' => 'required'
+		]); 
+		if ($validator->fails()) { 
+			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
+        }
         $response = false;
         $update = User::where('id', $id)->update(['password' => bcrypt($request->change_password)]);
         $response = ($update) ?  true : false ;
