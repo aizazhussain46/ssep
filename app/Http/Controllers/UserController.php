@@ -107,7 +107,7 @@ class UserController extends Controller
     public function change_password(Request $request,$id)
     {
         $validator = Validator::make($request->all(), [ 
-			'password' => 'required'
+			'change_password' => 'required'
 		]); 
 		if ($validator->fails()) { 
 			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
