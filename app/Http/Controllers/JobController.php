@@ -164,8 +164,8 @@ class JobController extends Controller
             'deliverables' => $request->deliverables,
             'brief' => $request->brief,
             'department_id' => $request->department_id,
-            '_from' => $request->from.' '.$request->from_time,
-            '_to' => $request->to.' '.$request->to_time,
+            '_from' => $request->from,
+            '_to' => $request->to,
             'district_id' => $request->district_id,
             'attachment' => $attachment
         ];
@@ -209,18 +209,18 @@ class JobController extends Controller
             $job = Job::find($id);
             if($flag == 'c'){
                 $to = $job->assigned_to_user->email;
-                // $bcc = $job->created_by_user->email;
+                $bcc = $job->created_by_user->email;
                 $subject = "Job Assigned";
                 $message = "Job has been assigned to".$job->assigned_to_user->name;
             }
             else{
                 $to = $job->created_by_user->email;
-                // $bcc = null;
+                $bcc = '';
                 $subject = "Job Updated";
                 $message = "Job has been updated successfully";
             }
            
-            $this->send_email_for_job($to,$bcc='francisgill1000@gmail.com',$subject,$message);
+            $this->send_email_for_job($to,$bcc,$subject,$message);
     }
     public function send_email_for_job($to,$bcc = null,$subject,$msg)
     {
