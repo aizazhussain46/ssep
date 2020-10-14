@@ -167,7 +167,6 @@ class JobController extends Controller
             '_from' => $request->from.' '.$request->from_time,
             '_to' => $request->to.' '.$request->to_time,
             'district_id' => $request->district_id,
-            'assigned_to' => $request->assigned_to,
             'attachment' => $attachment
         ];
         
@@ -176,6 +175,7 @@ class JobController extends Controller
         if($job->assigned_to == null && $request->assigned_to){
            
             $arr['status_id'] = 3;
+            $arr['assigned_to'] = $request->assigned_to;
             $updated = Job::where('id', $id)->update($arr);
             $this->job_update_fun($id,'c');
 
@@ -183,6 +183,7 @@ class JobController extends Controller
         else if($request->assigned_to != $job->assigned_to){
 
             $arr['status_id'] = 3;
+            $arr['assigned_to'] = $request->assigned_to;
             $updated = Job::where('id', $id)->update($arr);
             $this->job_update_fun($id,'c');
 
