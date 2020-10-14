@@ -215,7 +215,7 @@ class JobController extends Controller
             }
             else{
                 $to = $job->created_by_user->email;
-                $bcc = '';
+                $bcc = 'aizazkalwar46@gmail.com';
                 $subject = "Job Updated";
                 $message = "Job has been updated successfully";
             }
