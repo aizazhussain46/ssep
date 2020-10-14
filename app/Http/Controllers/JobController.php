@@ -170,25 +170,60 @@ class JobController extends Controller
             'assigned_to' => $request->assigned_to,
             'attachment' => $attachment
         ];
-        $flag = false;
+        
         $job = Job::find($id);
-        if($request->assigned_to != $job->assigned_to){
-            $arr['status_id'] = 3;
-            $flag = true;
+       
+        if($job->assigned_to == null && $request->assigned_to){
+           
+            $arr['status_id'] = $status_id;
+            $updated = Job::where('id', $id)->update($arr);
+            $this->job_update_fun($id,'c');
+
         }
-        $updated = Job::where('id', $id)->update($arr); 
-        if($updated && $flag){
-            $job = Job::find($id);
-            $to = $job->assigned_to_user->email;
-            $bcc = $job->created_by_user->email;
-            $subject = "Job Assigned";
-            $message = "Job has been assigned to ".$job->assigned_to_user->name;
-            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+        else if($request->assigned_to != $job->assigned_to){
+
+            $arr['status_id'] = $status_id;
+            $updated = Job::where('id', $id)->update($arr);
+            $this->job_update_fun($id,'c');
+
         }
-        list($status,$data) = $updated ? [ true , Job::find($id) ] : [ false , ''] ;
+        else{
+            
+            $updated = Job::where('id', $id)->update($arr);
+            $this->job_update_fun($id,'u');
+            
+        }
+
+
+       
+        list($status,$data) = $updated 
+        ? [ true , Job::find($id)] 
+        : [ false , ''] ;
 
         return response()->json(['success' => $status, 'data' => $data]);
 
+    }
+    public function job_update_fun($id,$flag){
+            
+            $job = Job::find($id);
+            if($flag == 'c'){
+                $to = $job->assigned_to_user->email;
+                $bcc = $job->created_by_user->email;
+                $subject = "Job Assigned";
+                $message = "Job has been assigned to".$job->assigned_to_user->name;
+            }
+            else{
+                $to = $job->created_by_user->email;
+                $bcc = null;
+                $subject = "Job Updated";
+                $message = "Job has been updated successfully";
+            }
+           
+            $this->send_email_for_job($to,$bcc,$subject,$message);
+    }
+    public function send_email_for_job($to,$bcc = null,$subject,$msg)
+    {
+        return Mail::to($to)->bcc($bcc)->send(new Emailsend($msg, $subject));
     }
 
     public function change_status(Request $request, $id)
