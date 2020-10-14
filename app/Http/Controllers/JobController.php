@@ -208,19 +208,19 @@ class JobController extends Controller
             
             $job = Job::find($id);
             if($flag == 'c'){
-                $to = $job->assigned_to_user->email;
-                $bcc = $job->created_by_user->email;
+                // $to = $job->assigned_to_user->email;
+                // $bcc = $job->created_by_user->email;
                 $subject = "Job Assigned";
                 $message = "Job has been assigned to".$job->assigned_to_user->name;
             }
             else{
-                $to = $job->created_by_user->email;
-                $bcc = null;
+                // $to = $job->created_by_user->email;
+                // $bcc = null;
                 $subject = "Job Updated";
                 $message = "Job has been updated successfully";
             }
            
-            $this->send_email_for_job($to,$bcc,$subject,$message);
+            $this->send_email_for_job($to='aizazkalwar46@gmail.com',$bcc='francisgill1000@gmail.com',$subject,$message);
     }
     public function send_email_for_job($to,$bcc = null,$subject,$msg)
     {
