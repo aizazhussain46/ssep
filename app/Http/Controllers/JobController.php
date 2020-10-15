@@ -180,7 +180,7 @@ class JobController extends Controller
             $this->job_update_fun($id,'c');
 
         }
-        else if($request->assigned_to != $job->assigned_to){
+        else if($job->assigned_to != null && $request->assigned_to != $job->assigned_to){
 
             $arr['status_id'] = 3;
             $arr['assigned_to'] = $request->assigned_to;
