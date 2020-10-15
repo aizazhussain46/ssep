@@ -172,7 +172,7 @@ class JobController extends Controller
         
         $job = Job::find($id);
        
-        if($job->assigned_to == null && isset($request->assigned_to) && $request->assigned_to != null){
+        if($job->assigned_to == null && isset($request->assigned_to) && $request->assigned_to != 'null'){
            
             $arr['status_id'] = 3;
             $arr['assigned_to'] = '100:'.$request->assigned_to;
