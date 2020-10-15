@@ -289,11 +289,11 @@ class JobController extends Controller
         $updated = Job::where('id', $id)->update(['attachment' => $attachment]); 
         if($updated){
             $data = Job::find($id);
-            $bcc = $data->assigned_to_user->email ?? '';
+            //$bcc = $data->assigned_to_user->email ?? '';
             $to = $data->created_by_user->email;
             $subject = "Attachment Updated";
             $message = "Attachment has been updated successfully.";
-            $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+            $mail = Mail::to($to)->send(new Emailsend($message, $subject));
         }
         return response()->json(['success' =>  $updated ? true : false, 'attachment' => $attachment]);
 
