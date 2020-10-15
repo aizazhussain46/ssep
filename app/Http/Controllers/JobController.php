@@ -215,7 +215,7 @@ class JobController extends Controller
             }
             else{
                 $to = $job->created_by_user->email;
-                $bcc = 'aizazkalwar46@gmail.com';
+                $bcc = null;
                 $subject = "Job Updated";
                 $message = "Job has been updated successfully";
             }
@@ -224,7 +224,12 @@ class JobController extends Controller
     }
     public function send_email_for_job($to,$bcc = null,$subject,$msg)
     {
-        return Mail::to($to)->bcc($bcc)->send(new Emailsend($msg, $subject));
+        if($bcc){
+            return Mail::to($to)->bcc($bcc)->send(new Emailsend($msg, $subject));
+        }
+        else{
+            return Mail::to($to)->send(new Emailsend($msg, $subject));
+        }
     }
 
     public function change_status(Request $request, $id)
