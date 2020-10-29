@@ -20,7 +20,7 @@ class CreateJobsTable extends Migration
             $table->string('nature_of_task')->nullable();
             $table->longText('brief')->nullable();
             $table->longText('deliverables')->nullable();
-            $table->string('attachment')->nullable();
+            $table->longText('attachment')->nullable();
             $table->integer('district_id')->nullable();
             $table->integer('department_id')->nullable();
             $table->integer('status_id')->nullable();

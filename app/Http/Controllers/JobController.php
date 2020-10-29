@@ -87,12 +87,18 @@ class JobController extends Controller
 
         }
 
-        $attachment = asset('uploads/attachments/no-img.png');
+        $attachment = array();
 
         if($request->hasFile('attachment')){
-           $attachment = $request->attachment->getClientOriginalName();
-           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
-           $attachment = asset('uploads/attachments/' . $attachment);
+            $att = $request->attachment;
+            foreach($att as $attach){
+                $img = $attach->getClientOriginalName();
+                $attach->move(public_path('uploads/attachments/'),$img);
+                $attachment[] = asset('uploads/attachments/' . $img);
+            }
+        }
+        else{
+            $attachment[] = asset('uploads/attachments/no-img.png');
         }
         
         $arr = [
@@ -145,15 +151,18 @@ class JobController extends Controller
 
     public function update_job(Request $request, $id)
     {
-        $attachment = '';
+        $attachment = array();
 
         if($request->hasFile('attachment')){
-           $attachment = $request->attachment->getClientOriginalName();
-           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
-           $attachment = asset('uploads/attachments/' . $attachment);
+
+            $att = $request->attachment;
+            foreach($att as $attach){
+                $img = $attach->getClientOriginalName();
+                $attach->move(public_path('uploads/attachments/'),$img);
+                $attachment[] = asset('uploads/attachments/' . $img);
+            }
         }
         else{ $attachment = Job::find($id)->attachment; }
-
         
         $request->job_type != 1 ? $request->department_id = null : $request->district_id = null ;
 
@@ -276,12 +285,17 @@ class JobController extends Controller
 
     public function update_attachment(Request $request, $id)
     {
-        $attachment = '';
+        $attachment = array();
 
         if($request->hasFile('attachment')){
-           $attachment = $request->attachment->getClientOriginalName();
-           $request->attachment->move(public_path('uploads/attachments/'),$attachment);
-           $attachment = asset('uploads/attachments/' . $attachment);
+
+            $att = $request->attachment;
+            
+            foreach($att as $attach){
+                $img = $attach->getClientOriginalName();
+                $attach->move(public_path('uploads/attachments/'),$img);
+                $attachment[] = asset('uploads/attachments/' . $img);
+            }
         }
         else{ $attachment = Job::find($id)->attachment; }
         
@@ -301,7 +315,38 @@ class JobController extends Controller
             
         }
         return response()->json(['success' =>  $updated ? true : false, 'attachment' => $attachment]);
+    }
 
+    public function add_attachment(Request $request, $id)
+    {
+        $attachment = Job::find($id)->attachment;
+
+        if($request->hasFile('attachment')){
+
+            $att = $request->attachment;
+            
+            foreach($att as $attach){
+                $img = $attach->getClientOriginalName();
+                $attach->move(public_path('uploads/attachments/'),$img);
+                $attachment[] = asset('uploads/attachments/' . $img);
+            }
+        }
+        
+        $updated = Job::where('id', $id)->update(['attachment' => $attachment]); 
+        // if($updated){
+        //     $data = Job::find($id);
+        //     $bcc = $data->assigned_to_user->email ?? null;
+        //     $to = $data->created_by_user->email;
+        //     $subject = "Attachment Updated";
+        //     $message = "Attachment has been updated successfully.";
+        //     if($bcc){
+        //         $mail = Mail::to($to)->bcc($bcc)->send(new Emailsend($message, $subject));
+        //     }
+        //     else{
+        //         $mail = Mail::to($to)->send(new Emailsend($message, $subject));
+        //     } 
+        // }
+        return response()->json(['success' =>  $updated ? true : false, 'attachment' => $attachment]);
     }
 
     public function share(Request $request, $id)

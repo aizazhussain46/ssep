@@ -40,6 +40,7 @@ Route::get('btl_records/{user_id}', 'JobController@btl_records');
 Route::post('update_job/{id}', 'JobController@update_job');
 Route::post('share/{id}', 'JobController@share');
 Route::post('update_attachment/{id}', 'JobController@update_attachment');
+Route::post('add_attachment/{id}', 'JobController@add_attachment');
 Route::post('change_status/{id}', 'JobController@change_status');
 
 Route::get('created_by_users', 'UserController@created_by_users');

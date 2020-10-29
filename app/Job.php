@@ -67,6 +67,7 @@ class Job extends Model
         // '_from' => 'datetime:d-M-y',
         // '_to' => 'datetime:d-M-y'
         // 'job_type' => 'boolean',
-        'created_at' => 'datetime:d-M-y'
+        'created_at' => 'datetime:d-M-y',
+        'attachment' => 'array'
     ];
 }

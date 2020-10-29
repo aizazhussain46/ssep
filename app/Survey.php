@@ -26,6 +26,7 @@ class Survey extends Model
     }
 
     protected $casts = [
-        'created_at' => 'datetime:d-M-y'
+        'created_at' => 'datetime:d-M-y',
+        'attachment' => 'array'
     ];
 }
