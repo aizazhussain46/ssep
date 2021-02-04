@@ -92,7 +92,10 @@ class SurveyController extends Controller
             'user_id' => $request->user_id,
             'job_id' => $request->job_id,
             'district_id' => $request->district_id,
-            'attachment' => $attachment
+            'attachment' => $attachment,
+            'map_lat' => $request->map_lat,
+            'map_long' => $request->map_long,
+            'map_location' => $request->map_location,
         ];
         //echo json_encode($arr);
         //print_r($request->all());

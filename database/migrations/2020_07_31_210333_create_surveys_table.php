@@ -52,7 +52,10 @@ class CreateSurveysTable extends Migration
             $table->integer('district_id')->nullable();
             $table->string('attachment')->nullable();
             $table->integer('job_id');
-            $table->integer('user_id');          
+            $table->integer('user_id');
+            $table->longText('map_lat')->nullable();
+            $table->longText('map_long')->nullable();
+            $table->longText('map_location')->nullable();          
             $table->timestamps();
         });
     }
