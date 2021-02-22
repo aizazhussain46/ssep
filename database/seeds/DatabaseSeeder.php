@@ -20,12 +20,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'master@erp.com',
                 'password' => bcrypt('secret')
             ],
-            [
-                'master' => 1,
-                'name' => 'pmu',
-                'email' => 'pmu@ord.com',
-                'password' => bcrypt('secret')
-            ]
+           
         ];
 
         \DB::table('users')->insert($users);
@@ -34,10 +29,7 @@ class DatabaseSeeder extends Seeder
             ['role' => 'Team Head'],
             ['role' => 'Team Sub Head'],
             ['role' => 'User'],
-            ['role' => 'Sub User'],
-            ['role' => 'Partner 1'],
-            ['role' => 'Partner 2'],
-            ['role' => 'Client'],
+            ['role' => 'PMU'],
         ];
         \DB::table('roles')->insert($roles);
 
