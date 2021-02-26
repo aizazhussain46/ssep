@@ -29,10 +29,10 @@ class User extends Authenticatable
     ];
      
     protected $with = [
-        'role:id,role',
-        'department:id,department',
-        'status:id,status,keyword',
-        'district:id,district'
+        // 'role:id,role',
+        // 'department:id,department',
+        // 'status:id,status,keyword',
+        // 'district:id,district'
     ];
 
     public function role()
