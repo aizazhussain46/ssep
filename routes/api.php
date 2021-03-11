@@ -57,3 +57,7 @@ Route::get('surveys_filter', 'ReportController@survey');
 
 
 Route::get('send_email', 'JobController@send_email');
+
+
+Route::resource('callcenterform', 'CallcenterformController');
+Route::resource('beneficiaryform', 'BeneficiaryformController');
