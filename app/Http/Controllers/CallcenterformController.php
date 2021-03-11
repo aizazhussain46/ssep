@@ -67,7 +67,8 @@ class CallcenterformController extends Controller
 
     public function show($id)
     {
-        //
+        $call = Calcenterform::find($id);
+        return $call;
     }
 
     public function update(Request $request, $id)

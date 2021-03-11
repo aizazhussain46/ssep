@@ -56,7 +56,8 @@ class BeneficiaryformController extends Controller
 
     public function show($id)
     {
-        //
+        $beneficiary = Beneficiaryreferralform::find($id);
+        return $beneficiary;
     }
 
     public function update(Request $request, $id)
