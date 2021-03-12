@@ -32,6 +32,18 @@ class CallcenterformController extends Controller
 
 			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
         }
+
+        $attachment = asset('uploads/attachments/no-img.png');
+        $attach = $request->attachment;
+        if($attach){
+        $type = explode(",", $attach);
+        $filename = 'attach_'.uniqid().'.'.$type[0];
+        
+        $ifp = fopen( public_path('uploads/attachments/'.$filename), 'wb' ); 
+        fwrite( $ifp, base64_decode($type[1]));
+        fclose( $ifp );
+        $attachment = asset('uploads/attachments/'.$filename); 
+        }
         
         $fields = [
             'form_no' => $request->form_no,
@@ -55,6 +67,10 @@ class CallcenterformController extends Controller
             'mocrofinanceload' => $request->mocrofinanceload,
             'mfi' => $request->mfi,
             'user_id' => Auth::id(),
+            'attachment' => $attachment,
+            'map_lat' => $request->map_lat,
+            'map_long' => $request->map_long,
+            'map_location' => $request->map_location,
         ];
 
         $created = Calcenterform::create($fields);
