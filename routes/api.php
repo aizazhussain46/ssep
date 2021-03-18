@@ -64,7 +64,10 @@ Route::resource('beneficiaryform', 'BeneficiaryformController');
 Route::resource('fieldactivity', 'FieldactivityController');
 
 Route::get('test',function(){
-    dump(['post_max_size'=> ini_get('post_max_size')]);
-    dump(['upload_max_filesize'=> ini_get('upload_max_filesize')]);
-    dump(ini_get_all());
+    // ini_set('post_max_size','50M');
+    // ini_set('upload_max_filesize','10M');
+    // dump(['post_max_size'=> ini_get('post_max_size')]);
+    // dump(['upload_max_filesize'=> ini_get('upload_max_filesize')]);
+    // dump(ini_get_all());
+    phpinfo();
 });
