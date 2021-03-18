@@ -61,3 +61,4 @@ Route::get('send_email', 'JobController@send_email');
 
 Route::resource('callcenterform', 'CallcenterformController');
 Route::resource('beneficiaryform', 'BeneficiaryformController');
+Route::resource('fieldactivity', 'FieldactivityController');
