@@ -28,7 +28,7 @@ class FieldactivityController extends Controller
             ]); 
 		if ($validator->fails()) { 
 
-			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
+			return response()->json([ 'success' => false, 'errors' => $validator->errors() ],201); 
         }
 
         $attachment = asset('uploads/attachments/no-img.png');
@@ -92,7 +92,7 @@ class FieldactivityController extends Controller
         if ($created) {
             return response()->json([ 'success' => true, 'data' => $created ],200); 
         } else {
-            return response()->json([ 'success' => false, 'data' => '' ],200); 
+            return response()->json([ 'success' => false, 'data' => '' ],201); 
         }
     }
 
