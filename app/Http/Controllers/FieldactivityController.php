@@ -32,7 +32,7 @@ class FieldactivityController extends Controller
         }
 
         $attachment = asset('uploads/attachments/no-img.png');
-        $attach = $request->attachment;
+        $attach = $request->images;
         
         if(!empty($attach)){
             $attachment = array();
