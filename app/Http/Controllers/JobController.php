@@ -114,7 +114,7 @@ class JobController extends Controller
             'from_time' => $request->from_time,
             'to_time' => $request->to_time,
             'district_id' => $request->district_id,
-            'status_id' => 6,
+            'status_id' => 1,
             'attachment' => $attachment
 
         ];
