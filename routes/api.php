@@ -63,6 +63,10 @@ Route::resource('callcenterform', 'CallcenterformController');
 Route::resource('beneficiaryform', 'BeneficiaryformController');
 Route::resource('fieldactivity', 'FieldactivityController');
 
+Route::resource('complain', 'ComplainController');
+
+Route::post('complain/change_status/{id}', [ComplainController::class,'change_status']);
+
 Route::get('test',function(){
     // ini_set('post_max_size','50M');
     // ini_set('upload_max_filesize','10M');

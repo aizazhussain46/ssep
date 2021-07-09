@@ -14,45 +14,75 @@ class AuthController extends Controller
         $this->middleware('auth:api')->except('login','btl_login');
 	}
 
-	public function login(Request $request){ 
+	public function login(Request $request){
 
 	 return $this->login_worker([
 		 'email' => $request->email,
 		 'password' => $request->password,
-		 'isActive' => 1
+		 'isActive' => 1,
+
 		 ]);
 
 	}
 
 
-	public function btl_login(Request $request){ 
-		  
-		return $this->login_worker([
-			'email' => $request->email, 
-			'password' => $request->password, 
+	public function btl_login(Request $request){
+
+
+
+		return $this->login_worker_btl([
+			'email' => $request->email,
+			'password' => $request->password,
 			'isActive' => 1,
 			'department_id' => 5
 			]);
-	
+
+
 		}
 
+
+
 	public function me(Request $request){
-		return response()->json([ 'user' => Auth::user() ],200); 
+		return response()->json([ 'user' => Auth::user() ],200);
 	}
 
 	public function login_worker($params)
 	{
-		if(Auth::attempt($params)){ 
-			$user = Auth::user(); 
+		if(Auth::attempt($params)){
+			$user = Auth::user();
+            if($user->department_id !=5){
+
+
 			$user->user_type = Role::find($user->role_id)->role ?? '';
 
 			return response()->json([
 				'token' => $user->createToken('myApp')->accessToken,
-				'user' => $user], 200); 
-			} 
-			else{ 
-			return response()->json(['error'=>'email or password is incorrect'], 422); 
-			} 
+				'user' => $user], 200);
+			}
+            else{
+                return response()->json(['error'=>'email or password is incorrect'], 422);
+                }
+
+
+        }
+			else{
+			return response()->json(['error'=>'email or password is incorrect'], 422);
+			}
+	}
+
+    public function login_worker_btl($params)
+	{
+		if(Auth::attempt($params)){
+			$user = Auth::user();
+			$user->user_type = Role::find($user->role_id)->role ?? '';
+
+			return response()->json([
+				'token' => $user->createToken('myApp')->accessToken,
+				'user' => $user], 200);
+			}
+			else{
+			return response()->json(['error'=>'email or password is incorrect'], 422);
+			}
 	}
 
 }

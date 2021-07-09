@@ -20,31 +20,56 @@ class CallcenterformController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [ 
+        $validator = Validator::make($request->all(), [
             'form_no' => 'required',
             'name' => 'required',
             'father_name' => 'required',
             'cnic' => 'required|unique:calcenterforms',
             'mobile_no' => 'required',
             'district' => 'required',
-            ]); 
-		if ($validator->fails()) { 
+            ]);
 
-			return response()->json([ 'success' => false, 'errors' => $validator->errors() ]); 
-        }
 
-        $attachment = asset('uploads/attachments/no-img.png');
-        $attach = $request->attachment;
-        if($attach){
-        $type = explode(",", $attach);
-        $filename = 'attach_'.uniqid().'.'.$type[0];
-        
-        $ifp = fopen( public_path('uploads/attachments/'.$filename), 'wb' ); 
-        fwrite( $ifp, base64_decode($type[1]));
-        fclose( $ifp );
-        $attachment = asset('uploads/attachments/'.$filename); 
-        }
-        
+        //   echo "<pre>";
+        // print_r($attachment);
+        // die;
+// ========================
+
+if ($validator->fails()) {
+
+    return response()->json([ 'success' => false, 'errors' => $validator->errors() ],201);
+}
+
+
+// //  echo "<pre>";
+// //     print_r($attach);
+// //     echo "</pre>";
+// //     die;
+
+
+
+$att_arr = asset('uploads/attachments/no-img.png');
+$attendance = $request->attachment;
+if(!empty($attendance)){
+    $att_arr = array();
+
+foreach($attendance as $att){
+
+    $ext = $att['extension'];
+    $filename = 'attach_'.uniqid().'.'.$ext;
+
+    $ifp = fopen( public_path('uploads/attachments/'.$filename), 'wb' );
+    fwrite( $ifp, base64_decode($att['image']));
+    fclose( $ifp );
+    $att_arr[] = asset('uploads/attachments/'.$filename);
+}
+}
+
+
+// ============================
+
+
+
         $fields = [
             'form_no' => $request->form_no,
             'date' => $request->date,
@@ -67,7 +92,7 @@ class CallcenterformController extends Controller
             'mocrofinanceload' => $request->mocrofinanceload,
             'mfi' => $request->mfi,
             'user_id' => Auth::id(),
-            'attachment' => $attachment,
+            'attachment' => $att_arr,
             'map_lat' => $request->map_lat,
             'map_long' => $request->map_long,
             'map_location' => $request->map_location,
@@ -75,9 +100,9 @@ class CallcenterformController extends Controller
 
         $created = Calcenterform::create($fields);
         if ($created) {
-            return response()->json([ 'success' => true, 'data' => $created ],200); 
+            return response()->json([ 'success' => true, 'data' => $created ],200);
         } else {
-            return response()->json([ 'success' => false, 'data' => '' ],200); 
+            return response()->json([ 'success' => false, 'data' => '' ],201);
         }
     }
 
