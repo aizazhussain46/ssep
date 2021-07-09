@@ -9,7 +9,7 @@ class Calcenterform extends Model
     protected $guarded = [];
 
     protected $with = [
-        'user:id,name,email,role_id,cnic,mobile_no,department_id,district_id,attachment'
+        'user:id,name,email,role_id,cnic,mobile_no,department_id,district_id'
     ];
 
     public function user()
